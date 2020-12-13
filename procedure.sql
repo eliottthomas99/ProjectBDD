@@ -166,7 +166,8 @@ CREATE PROCEDURE ajoutLivre(IN contenuValCodeBarre INT,
 							contenuValCodeCatalogue INT,
                             artisteValAuteur varchar(45),
                             genreValGenre varchar(45),
-                            editeurValEditeur varchar(45))
+                            editeurValEditeur varchar(45),
+                            etablissementValNom varchar(45))
 
 ajoutLivre_label:BEGIN
 
@@ -184,17 +185,63 @@ WHERE NOT EXISTS (SELECT * FROM contenu
 CALL ajoutArtiste(artisteValAuteur,"ecrivain");
 CALL ajoutGenre(genreValGenre);
 CALL ajoutEditeur(editeurValEditeur);
+CALL ajoutEtablissement(etablissementValNom);
 
 #tables de relations
 CALL ajoutEdite(editeurValEditeur,contenuValCodeBarre,0);
 CALL ajoutParticipe(artisteValAuteur,contenuValCodeBarre,0);
 CALL ajoutDecrit(genreValGenre,contenuValCodeBarre,0);
+CALL ajoutPossede(etablissementValNom,contenuValCodeBarre,0);
 
 
 END;
 $$
 
 ###########################################################################################################
+
+############################################################################
+#ajoutDVD(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValRealisateur,artisteValProducteur,genreValGenre)
+############################################################################
+
+drop procedure if exists ajoutDVD$$
+CREATE PROCEDURE ajoutDVD(IN contenuValCodeBarre INT, 
+							contenuValTitre varchar(45),
+							contenuValCodeCatalogue INT,
+                            artisteValRealisateur varchar(45),
+                            artisteValProducteur varchar(45),
+                            genreValGenre varchar(45),
+                            etablissementValNom varchar(45))
+
+ajoutDVD_label:BEGIN
+
+
+IF (select Count(*) from contenu where Code_Barre=contenuValCodeBarre)>=1 THEN
+	leave ajoutDVD_label;
+END IF;
+
+INSERT INTO contenu (Code_Barre,Numero_License,Titre,Type,Support,CodeCatalogue) 
+SELECT contenuValCodeBarre, 0, contenuValTitre,'physique','DVD', contenuValCodeCatalogue FROM DUAL 
+WHERE NOT EXISTS (SELECT * FROM contenu 
+      WHERE Code_Barre=contenuValCodeBarre
+            LIMIT 1) ;
+ 
+CALL ajoutArtiste(artisteValRealisateur,"realisateur");
+CALL ajoutArtiste(artisteValProducteur,"producteur");
+CALL ajoutGenre(genreValGenre);
+CALL ajoutEtablissement(etablissementValNom);
+
+#tables de relations
+CALL ajoutParticipe(artisteValRealisateur,contenuValCodeBarre,0);
+CALL ajoutParticipe(artisteValProducteur,contenuValCodeBarre,0);
+CALL ajoutDecrit(genreValGenre,contenuValCodeBarre,0);
+CALL ajoutPossede(etablissementValNom,contenuValCodeBarre,0);
+
+
+END;
+$$
+
+###########################################################################################################
+
 
 
 
@@ -212,15 +259,16 @@ CALL ajoutEdite('Gallimard',20,0);
 
 CALL ajoutParticipe('Napoleon Hill',20,0);
 
-CALL ajoutLivre(30,"La Chartreuse de Parme",24,"Stendhal","Roman","Ambroise Dupont");
+CALL ajoutLivre(30,"La Chartreuse de Parme",24,"Stendhal","Roman","Ambroise Dupont","Orange");
 
-CALL ajoutLivre(30,"Le rouge et le noir",25,"Stendhal","Roman","Levasseur");
+CALL ajoutLivre(40,"Le rouge et le noir",25,"Stendhal","Roman","Levasseur","IUT");
 
 CALL ajoutEtablissement("Orange");
 
-CALL ajoutPossede("Orange",30,0);
+CALL ajoutPossede("ENSSAT",20,0);
+CALL ajoutPossede("ENSSAT",10,0);
 
-
+CALL ajoutDVD(50,"Nemo",26,"Andrew Stanton","Pixar","animation","ENSSAT");
 
 
 
