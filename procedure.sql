@@ -102,11 +102,11 @@ CREATE PROCEDURE ajoutDecrit(IN decritValNom varchar(45), decritValCodeBarre INT
 
 BEGIN
 
-INSERT INTO decrit (Genre_id,Contenu_Code_Barre,Contenu_Numero_License) 
+INSERT INTO décrit (Genre_id,Contenu_Code_Barre,Contenu_Numero_License) 
 SELECT (select id from genre where nom =decritValNom),
        decritValCodeBarre,
        decritValNumeroLicense FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM decrit 
+WHERE NOT EXISTS (SELECT * FROM décrit 
       WHERE Genre_id=(select id from genre where nom =decritValNom) and
             Contenu_Code_Barre=decritValCodeBarre and
             Contenu_Numero_License=decritValNumeroLicense
@@ -117,7 +117,9 @@ END;
 $$
 
 
-"""
+############################################################################
+#ajoutLivre(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValAuteur,genreValGenre,editeurValEditeur)
+############################################################################
 drop procedure if exists ajoutLivre$$
 CREATE PROCEDURE ajoutLivre(IN contenuValCodeBarre INT, 
 							contenuValTitre varchar(45),
@@ -126,7 +128,12 @@ CREATE PROCEDURE ajoutLivre(IN contenuValCodeBarre INT,
                             genreValGenre varchar(45),
                             editeurValEditeur varchar(45))
 
-BEGIN
+ajoutLivre_label:BEGIN
+
+
+IF (select Count(*) from contenu where Code_Barre=contenuValCodeBarre)>=1 THEN
+	leave ajoutLivre_label;
+END IF;
 
 INSERT INTO contenu (Code_Barre,Numero_License,Titre,Type,Support,CodeCatalogue) 
 SELECT contenuValCodeBarre, 0, contenuValTitre,'physique','livre', contenuValCodeCatalogue FROM DUAL 
@@ -134,17 +141,20 @@ WHERE NOT EXISTS (SELECT * FROM contenu
       WHERE Code_Barre=contenuValCodeBarre
             LIMIT 1) ;
  
-CALL ajoutArtiste(artisteValAuteur);
+CALL ajoutArtiste(artisteValAuteur,"ecrivain");
 CALL ajoutGenre(genreValGenre);
 CALL ajoutEditeur(editeurValEditeur);
 
-
+#tables de relations
+CALL ajoutEdite(editeurValEditeur,contenuValCodeBarre,0);
+CALL ajoutParticipe(artisteValAuteur,contenuValCodeBarre,0);
+CALL ajoutDecrit(genreValGenre,contenuValCodeBarre,0);
 
 
 END;
 $$
-"""
 
+###########################################################################################################
 
 
 
@@ -161,6 +171,10 @@ CALL ajoutArtiste('Napoleon Hill','ecrivain');
 CALL ajoutEdite('Gallimard',20,0);
 
 CALL ajoutParticipe('Napoleon Hill',20,0);
+
+CALL ajoutLivre(30,"La Chartreuse de Parme",24,"Stendhal","Roman","Ambroise Dupont");
+
+CALL ajoutLivre(30,"Le rouge et le noir",25,"Stendhal","Roman","Levasseur");
 
 
 
