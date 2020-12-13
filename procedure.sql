@@ -57,6 +57,27 @@ WHERE NOT EXISTS (SELECT * FROM artiste
 
 END;
 $$
+#################################################################################################
+
+
+drop procedure if exists ajoutEtablissement$$
+CREATE PROCEDURE ajoutEtablissement(IN etablissementValNom varchar(45))
+
+BEGIN
+
+INSERT INTO etablissement (nom) 
+SELECT etablissementValNom FROM DUAL 
+WHERE NOT EXISTS (SELECT * FROM etablissement 
+      WHERE nom=etablissementValNom LIMIT 1) ;
+
+
+END;
+$$
+
+
+
+
+##############################################################
 
 drop procedure if exists ajoutEdite$$
 CREATE PROCEDURE ajoutEdite(IN editeValNom varchar(45), editeValCodeBarre INT, editeValNumeroLicense INT)
@@ -116,6 +137,25 @@ WHERE NOT EXISTS (SELECT * FROM décrit
 END;
 $$
 
+######################################################
+drop procedure if exists ajoutPossede$$
+CREATE PROCEDURE ajoutPossede(IN possedeValNom varchar(45), possedeValCodeBarre INT, possedeValNumeroLicense INT)
+
+BEGIN
+
+INSERT INTO possede (Etablissement_id,Contenu_Code_Barre,Contenu_Numero_License) 
+SELECT (select id from etablissement where nom =possedeValNom),
+       possedeValCodeBarre,
+       possedeValNumeroLicense FROM DUAL 
+WHERE NOT EXISTS (SELECT * FROM possede 
+      WHERE Etablissement_id=(select id from etablissement where nom =possedeValNom) and # ligne non nécéssaire car selon le sujet un contenu ne peut être possédé que par un établissement. On le laisse en vue d'une éventuelle évolution.
+            Contenu_Code_Barre=possedeValCodeBarre and
+            Contenu_Numero_License=possedeValNumeroLicense
+            LIMIT 1) ;
+
+
+END;
+$$
 
 ############################################################################
 #ajoutLivre(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValAuteur,genreValGenre,editeurValEditeur)
@@ -175,6 +215,10 @@ CALL ajoutParticipe('Napoleon Hill',20,0);
 CALL ajoutLivre(30,"La Chartreuse de Parme",24,"Stendhal","Roman","Ambroise Dupont");
 
 CALL ajoutLivre(30,"Le rouge et le noir",25,"Stendhal","Roman","Levasseur");
+
+CALL ajoutEtablissement("Orange");
+
+CALL ajoutPossede("Orange",30,0);
 
 
 
