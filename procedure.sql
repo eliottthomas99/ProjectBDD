@@ -156,6 +156,26 @@ WHERE NOT EXISTS (SELECT * FROM possede
 
 END;
 $$
+###########################################################################
+# Ajout&Relation
+###########################################################################
+drop procedure if exists ajoutLienPossede$$
+CREATE PROCEDURE ajoutLienPossede(IN etablissementNom varchar(45), possedeValCodeBarre INT, possedeValNumeroLicense INT)
+
+BEGIN
+CALL ajoutEtablissement(etablissementNom);
+CALL ajoutPossede(etablissementNom,possedeValCodeBarre,possedeValNumeroLicense);
+
+END;
+$$
+
+
+
+
+
+
+
+
 
 ############################################################################
 #ajoutLivre(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValAuteur,genreValGenre,editeurValEditeur)
@@ -269,6 +289,8 @@ CALL ajoutPossede("ENSSAT",20,0);
 CALL ajoutPossede("ENSSAT",10,0);
 
 CALL ajoutDVD(50,"Nemo",26,"Andrew Stanton","Pixar","animation","ENSSAT");
+
+CALL ajoutLienPossede("Nokia",
 
 
 
