@@ -339,37 +339,25 @@ $$
 
 ###########################################################################################################
 
-#ajoutAbonne(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValRealisateur,artisteValProducteur,genreValGenre)
+#ajoutAbonne(abonneValNom,abonneValPrenom,abonneValAdresse)
 ############################################################################
-/*
-drop procedure if exists ajoutEFilm$$
-CREATE PROCEDURE ajoutEFilm(IN contenuValCodeBarre INT, 
-							contenuValTitre varchar(45),
-							contenuValCodeCatalogue INT,
-                            artisteValRealisateur varchar(45),
-                            artisteValProducteur varchar(45),
-                            genreValGenre varchar(45),
-                            etablissementValNom varchar(45))
 
-ajoutEFilm_label:BEGIN
+drop procedure if exists ajoutAbonne$$
+CREATE PROCEDURE ajoutAbonne(IN abonneValNom varchar(45),
+                            abonneValPrenom varchar(45),
+                            abonneValAdresse varchar(45))
 
+ajoutAbonne_label:BEGIN
 
-IF (select Count(*) from contenu where Code_Barre=contenuValCodeBarre)>=1 THEN
-	leave ajoutEFilm_label;
-END IF;
-
-INSERT INTO contenu (Code_Barre,Numero_License,Titre,Type,Support,CodeCatalogue) 
-SELECT contenuValCodeBarre, 0, contenuValTitre,'numerique','EFilm', contenuValCodeCatalogue FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM contenu 
-      WHERE Code_Barre=contenuValCodeBarre
-            LIMIT 1) ;
+INSERT INTO abonne (nom,prenom,adresse,dateAdhesion,penalite)
+SELECT abonneValNom, abonneValPrenom, abonneValAdresse, CURDATE(),0 FROM DUAL ;
  
 
 
 
 END;
 $$
-*/
+
 
 
 
@@ -383,9 +371,14 @@ $$
 DELIMITER ;
 
 
+CALL ajoutLivre(10,"Harry Potter a l'ecole des sorciers",19,"JK Rowling","fantastique","Gallimard jeunesse","ENSSAT");
+
+CALL ajoutLivre(20,"Titatic",20,"Stendhal","Roman","Anthony Ingels","ENSSAT");
+
 CALL ajoutGenre('policier');
 
 CALL ajoutEditeur('Hachette');
+CALL ajoutEditeur('Gallimard');
 
 CALL ajoutArtiste('Napoleon Hill','ecrivain');
 
@@ -410,7 +403,7 @@ CALL ajoutLienParticipe("Lee Unkrich","realisateur", 50,0);
 CALL ajoutLienEdite("Gallimard", 20,0);
 
 CALL ajoutEFilm(60,"Star Wars Episode III",27,"George Lucas","Rick McCallum","science fiction","ENSSAT");
-
+CALL ajoutAbonne("THOMAS","Julien","4 place des Ursulines")
 
 
 
