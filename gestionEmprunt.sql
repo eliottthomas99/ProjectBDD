@@ -1,12 +1,24 @@
-use bibliotheque;
+USE bibliotheque;
 
 DELIMITER $$
-drop procedure if exists emprunterContenu$$ 
+
+DROP PROCEDURE IF EXISTS nombreEmprunt$$
+CREATE PROCEDURE nombreEmprunt(IN abonneValNumero INT)
+# retourne le nombre de contenu qu un abonne n a pas encore rendu
+NOMBREEMPRUNT_LABEL:BEGIN
+	SELECT COUNT(*) FROM emprunt WHERE Abonne_numero = abonneValNumero;
+END;
+
+
+
+DROP PROCEDURE IF EXISTS emprunterContenu$$ 
 CREATE PROCEDURE emprunterContenu(IN contenuValCodeBarre INT, contenuValNumeroLicense INT,abonneValNumero INT)
 # l'usager emprunte un contenu
-emprunterContenu_label:BEGIN
-
-
+EMPRUNTERCONTENU_LABEL:BEGIN
+# On regarde si l abonne a deja 5 ou plus emprunts en cours
+IF (SELECT COUNT(*) FROM emprunt WHERE Abonne_numero = abonneValNumero) >= 5 THEN
+	LEAVE EMPRUNTERCONTENU_LABEL;	
+END IF;
 INSERT INTO emprunt(Contenu_Code_Barre, Contenu_Numero_License,Abonne_numero,date_pret)
       SELECT contenuValCodeBarre,
             contenuValNumeroLicense,
@@ -17,8 +29,8 @@ INSERT INTO emprunt(Contenu_Code_Barre, Contenu_Numero_License,Abonne_numero,dat
       WHERE NOT EXISTS (
                   SELECT *
                   FROM emprunt
-                  WHERE Contenu_Code_Barre=contenuValCodeBarre and 
-                        Contenu_Numero_License=contenuValNumeroLicense and
+                  WHERE Contenu_Code_Barre=contenuValCodeBarre AND 
+                        Contenu_Numero_License=contenuValNumeroLicense AND
                         date_retour IS NULL
                   LIMIT 1
             );
@@ -28,15 +40,15 @@ END;
 $$
 
 
-drop procedure if exists rendreContenu$$ 
+DROP PROCEDURE IF EXISTS rendreContenu$$ 
 CREATE PROCEDURE rendreContenu(IN contenuValCodeBarre INT, contenuValNumeroLicense INT)
 # l'usager rend un contenu
-rendreContenu_label:BEGIN
+RENDRECONTENU_LABEL:BEGIN
 
 
-UPDATE emprunt set date_retour= CURDATE()
-	  WHERE Contenu_Code_Barre=contenuValCodeBarre and 
-			Contenu_Numero_License=contenuValNumeroLicense and
+UPDATE emprunt SET date_retour= CURDATE()
+	  WHERE Contenu_Code_Barre=contenuValCodeBarre AND 
+			Contenu_Numero_License=contenuValNumeroLicense AND
 			date_retour IS NULL
 	  LIMIT 1;
             
@@ -46,20 +58,20 @@ END;
 $$
 
 
-drop procedure if exists afficherDispo$$ 
+DROP PROCEDURE IF EXISTS afficherDispo$$ 
 CREATE PROCEDURE afficherDispo()
 # l'usager veut connaitre les contenu disponibles
-afficherDispo_label:BEGIN
+AFFICHERDISPO_LABEL:BEGIN
 
 
-SELECT * from contenu 
+SELECT * FROM contenu 
 
-Where (Code_Barre,Numero_License) not in 
+WHERE (Code_Barre,Numero_License) NOT IN 
 
 
 (SELECT Contenu_Code_Barre,Contenu_Numero_License 
-from Emprunt 
-where date_retour is null);
+FROM Emprunt 
+WHERE date_retour IS NULL);
 
 
 END;
@@ -68,6 +80,13 @@ $$
 
 DELIMITER ;
 
-#CALL emprunterContenu(20,0,12);
+CALL emprunterContenu(10,0,12);
+CALL emprunterContenu(20,0,12);
+CALL emprunterContenu(30,0,12);
+CALL emprunterContenu(40,0,12);
+CALL emprunterContenu(50,0,12);
+CALL emprunterContenu(60,0,12); # refuse l emprunt d un contenu car il y a deja 5 emprunts en cours
 #CALL rendreContenu(0,60);
-CALL afficherDispo();
+#CALL afficherDispo();
+
+#CALL nombreEmprunt(12);
