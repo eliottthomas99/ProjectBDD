@@ -49,13 +49,25 @@ DROP PROCEDURE IF EXISTS rendreContenu$$
 CREATE PROCEDURE rendreContenu(IN contenuValCodeBarre INT, contenuValNumeroLicense INT)
 # l'usager rend un contenu
 RENDRECONTENU_LABEL:BEGIN
-
-
-UPDATE emprunt SET date_retour= CURDATE()
-	  WHERE Contenu_Code_Barre=contenuValCodeBarre AND 
-			Contenu_Numero_License=contenuValNumeroLicense AND
-			date_retour IS NULL
-	  LIMIT 1;
+# On regarde si l abonne rend son contenu dans les temps
+SET @dateDebut = (SELECT date_pret FROM emprunt WHERE Contenu_Code_Barre = contenuValCodeBarre AND Contenu_Numero_License = contenuValNumeroLicense and date_retour IS NULL);
+SET @dateFin = CURDATE();
+IF (SELECT support FROM contenu WHERE Code_Barre = contenuValCodeBarre AND Numero_License = contenuValNumeroLicense) = "livre" OR
+	(SELECT support FROM contenu WHERE Code_Barre = contenuValCodeBarre AND Numero_License = contenuValNumeroLicense) = "ebook" THEN
+	SET @delai = 15 * ((SELECT renouvellement FROM emprunt WHERE Contenu_Code_Barre = contenuValCodeBarre AND Contenu_Numero_License = contenuValNumeroLicense and date_retour IS NULL) + 1);
+ELSE
+	SET @delai = 7 * ((SELECT renouvellement FROM emprunt WHERE Contenu_Code_Barre = contenuValCodeBarre AND Contenu_Numero_License = contenuValNumeroLicense and date_retour IS NULL) + 1);
+END IF;
+IF DATEDIFF(@dateFin, @dateDebut) > @delai THEN
+	UPDATE abonne SET penalite = penalite + 1 WHERE numero = (SELECT Abonne_numero FROM emprunt WHERE Contenu_Code_Barre = contenuValCodeBarre AND Contenu_Numero_License = contenuValNumeroLicense and date_retour IS NULL);	
+END IF;
+UPDATE emprunt 
+SET 
+    date_retour = CURDATE()
+WHERE
+    Contenu_Code_Barre = contenuValCodeBarre
+        AND Contenu_Numero_License = contenuValNumeroLicense
+        AND date_retour IS NULL LIMIT 1;
             
 
 
@@ -97,5 +109,10 @@ CALL emprunterContenu(60,0,12); # refuse l emprunt d un contenu car il y a deja 
 
 #CALL nombreEmprunt(12);
 
-UPDATE `bibliotheque`.`abonne` SET `penalite` = '1337' WHERE (`numero` = '11');
-CALL emprunterContenu(0,70,11); # ne devrait pas fonctionner car penalite trop haute
+#UPDATE `bibliotheque`.`abonne` SET `penalite` = '1337' WHERE (`numero` = '11');
+#CALL emprunterContenu(0,70,11); # ne devrait pas fonctionner car penalite trop haute
+
+# je rend en retard
+#CALL emprunterContenu(0,70,11);
+#UPDATE `bibliotheque`.`emprunt` SET `date_pret` = '2020-01-01' WHERE (`Contenu_Code_Barre` = '0000000000') and (`Contenu_Numero_License` = '0000000070') and (`Abonne_numero` = '11') and (`date_pret` = '2020-12-15');
+#CALL rendreContenu(0,70);
