@@ -424,12 +424,18 @@ ajoutAbonne_label :BEGIN
             abonneValAdresse,
             CURDATE(),
             0
-      FROM DUAL;
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM abonne
+                  WHERE adresse = abonneValAdresse
+                  LIMIT 1
+            );
 END;
 $$
 
 
-DELIMITER;
+DELIMITER ;
 
 CALL ajoutLivre(
       10,
@@ -498,4 +504,5 @@ CALL ajoutEFilm(
       "science fiction",
       "ENSSAT"
 );
-CALL ajoutAbonne("THOMAS", "Julien", "4 place des Ursulines")
+CALL ajoutAbonne("THOMAS", "Julien", "jthomas@enssat.fr");
+CALL ajoutAbonne("THOMAS","Jeremy","jthoma1@enssat.fr");
