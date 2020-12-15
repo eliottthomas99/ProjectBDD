@@ -100,16 +100,16 @@ $$
 
 
 drop procedure if exists ajoutParticipe$$
-CREATE PROCEDURE ajoutParticipe(IN participeValNom varchar(45), participeValCodeBarre INT, participeValNumeroLicense INT)
+CREATE PROCEDURE ajoutParticipe(IN participeValNom varchar(45), participeValType varchar(45) ,participeValCodeBarre INT, participeValNumeroLicense INT )
 
 BEGIN
 
 INSERT INTO participe (Artiste_id,Contenu_Code_Barre,Contenu_Numero_License) 
-SELECT (select id from artiste where nom =participeValNom),
+SELECT (select id from artiste where nom =participeValNom and type=participeValType ),
        participeValCodeBarre,
        participeValNumeroLicense FROM DUAL 
 WHERE NOT EXISTS (SELECT * FROM participe 
-      WHERE Artiste_id=(select id from artiste where nom =participeValNom) and
+      WHERE Artiste_id=(select id from artiste where nom =participeValNom and type=participeValType) and
             Contenu_Code_Barre=participeValCodeBarre and
             Contenu_Numero_License=participeValNumeroLicense
             LIMIT 1) ;
@@ -185,7 +185,7 @@ CREATE PROCEDURE ajoutLienParticipe(IN artisteNom varchar(45),artisteRole varcha
 
 BEGIN
 CALL ajoutArtiste(artisteNom,artisteRole);
-CALL ajoutParticipe(artisteNom,participeValCodeBarre,participeValNumeroLicense);
+CALL ajoutParticipe(artisteNom,artisteRole,participeValCodeBarre,participeValNumeroLicense);
 
 END;
 $$
@@ -240,7 +240,7 @@ CALL ajoutEtablissement(etablissementValNom);
 
 #tables de relations
 CALL ajoutEdite(editeurValEditeur,contenuValCodeBarre,0);
-CALL ajoutParticipe(artisteValAuteur,contenuValCodeBarre,0);
+CALL ajoutParticipe(artisteValAuteur,"ecrivain",contenuValCodeBarre,0);
 CALL ajoutDecrit(genreValGenre,contenuValCodeBarre,0);
 CALL ajoutPossede(etablissementValNom,contenuValCodeBarre,0);
 
@@ -282,8 +282,8 @@ CALL ajoutGenre(genreValGenre);
 CALL ajoutEtablissement(etablissementValNom);
 
 #tables de relations
-CALL ajoutParticipe(artisteValRealisateur,contenuValCodeBarre,0);
-CALL ajoutParticipe(artisteValProducteur,contenuValCodeBarre,0);
+CALL ajoutParticipe(artisteValRealisateur,"realisateur",contenuValCodeBarre,0);
+CALL ajoutParticipe(artisteValProducteur,"producteur",contenuValCodeBarre,0);
 CALL ajoutDecrit(genreValGenre,contenuValCodeBarre,0);
 CALL ajoutPossede(etablissementValNom,contenuValCodeBarre,0);
 
@@ -301,7 +301,7 @@ $$
 ############################################################################
 
 drop procedure if exists ajoutEFilm$$
-CREATE PROCEDURE ajoutEFilm(IN contenuValCodeBarre INT, 
+CREATE PROCEDURE ajoutEFilm(IN contenuValNumeroLicense INT, 
 							contenuValTitre varchar(45),
 							contenuValCodeCatalogue INT,
                             artisteValRealisateur varchar(45),
@@ -312,14 +312,14 @@ CREATE PROCEDURE ajoutEFilm(IN contenuValCodeBarre INT,
 ajoutEFilm_label:BEGIN
 
 
-IF (select Count(*) from contenu where Code_Barre=contenuValCodeBarre)>=1 THEN
+IF (select Count(*) from contenu where Numero_License=contenuValNumeroLicense)>=1 THEN
 	leave ajoutEFilm_label;
 END IF;
 
 INSERT INTO contenu (Code_Barre,Numero_License,Titre,Type,Support,CodeCatalogue) 
-SELECT contenuValCodeBarre, 0, contenuValTitre,'numerique','EFilm', contenuValCodeCatalogue FROM DUAL 
+SELECT 0, contenuValNumeroLicense, contenuValTitre,'numerique','EFilm', contenuValCodeCatalogue FROM DUAL 
 WHERE NOT EXISTS (SELECT * FROM contenu 
-      WHERE Code_Barre=contenuValCodeBarre
+      WHERE Numero_License=contenuValNumeroLicense
             LIMIT 1) ;
  
 CALL ajoutArtiste(artisteValRealisateur,"realisateur");
@@ -328,10 +328,10 @@ CALL ajoutGenre(genreValGenre);
 CALL ajoutEtablissement(etablissementValNom);
 
 #tables de relations
-CALL ajoutParticipe(artisteValRealisateur,contenuValCodeBarre,0);
-CALL ajoutParticipe(artisteValProducteur,contenuValCodeBarre,0);
-CALL ajoutDecrit(genreValGenre,contenuValCodeBarre,0);
-CALL ajoutPossede(etablissementValNom,contenuValCodeBarre,0);
+CALL ajoutParticipe(artisteValRealisateur,"realisateur",0,contenuValNumeroLicense);
+CALL ajoutParticipe(artisteValProducteur,"producteur",0,contenuValNumeroLicense);
+CALL ajoutDecrit(genreValGenre,0,contenuValNumeroLicense);
+CALL ajoutPossede(etablissementValNom,0,contenuValNumeroLicense);
 
 
 END;
@@ -384,7 +384,7 @@ CALL ajoutArtiste('Napoleon Hill','ecrivain');
 
 CALL ajoutEdite('Gallimard',20,0);
 
-CALL ajoutParticipe('Napoleon Hill',20,0);
+CALL ajoutParticipe('Napoleon Hill',"ecrivain",20,0);
 
 CALL ajoutLivre(30,"La Chartreuse de Parme",24,"Stendhal","Roman","Ambroise Dupont","Orange");
 
@@ -396,6 +396,7 @@ CALL ajoutPossede("ENSSAT",20,0);
 CALL ajoutPossede("ENSSAT",10,0);
 
 CALL ajoutDVD(50,"Nemo",26,"Andrew Stanton","Pixar","animation","ENSSAT");
+
 
 #CALL ajoutLienPossede("Nokia", 20,0);
 CALL ajoutLienDecrit("aventure", 50,0);
