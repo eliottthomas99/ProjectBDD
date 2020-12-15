@@ -1,38 +1,38 @@
-use bibliotheque;
+USE bibliotheque;
 
 DELIMITER $$
 
-drop procedure if exists afficherTout$$
+DROP PROCEDURE IF EXISTS afficherTout$$
 CREATE PROCEDURE afficherTout()
 
-afficherTout_label:BEGIN
+AFFICHERTOUT_LABEL:BEGIN
 
-select Code_Barre,Numero_License,Titre,Support from Contenu; # l'usager veut savoir tous les contenu existant
+SELECT Code_Barre,Numero_License,Titre,Support FROM Contenu; # l'usager veut savoir tous les contenu existant
 
 END;
 $$
 
-drop procedure if exists afficherNumerique$$
+DROP PROCEDURE IF EXISTS afficherNumerique$$
 CREATE PROCEDURE afficherNumerique()
 
-afficherNumerique_label:BEGIN
+AFFICHERNUMERIQUE_LABEL:BEGIN
 
-select Code_Barre,Numero_License,Titre,Support 
-from Contenu
-where Type="numerique"; 
+SELECT Code_Barre,Numero_License,Titre,Support 
+FROM Contenu
+WHERE Type="numerique"; 
 # l'usager veut savoir tous les contenu existant en numerique
 
 END;
 $$
 
-drop procedure if exists afficherPhysique$$
+DROP PROCEDURE IF EXISTS afficherPhysique$$
 CREATE PROCEDURE afficherPhysique()
 
-afficherPhysique_label:BEGIN
+AFFICHERPHYSIQUE_LABEL:BEGIN
 
-select Code_Barre,Numero_License,Titre,Support 
-from Contenu
-where type="physique"; 
+SELECT Code_Barre,Numero_License,Titre,Support 
+FROM Contenu
+WHERE type="physique"; 
 # l'usager veut savoir tous les contenu existant en pysique
 
 END;
@@ -41,81 +41,81 @@ $$
 
 
 
-drop procedure if exists afficherCorrespondanceArtiste$$ 
-CREATE PROCEDURE afficherCorrespondanceArtiste(IN artisteValNom varchar(45))
+DROP PROCEDURE IF EXISTS afficherCorrespondanceArtiste$$ 
+CREATE PROCEDURE afficherCorrespondanceArtiste(IN artisteValNom VARCHAR(45))
 # l'usager veut savoir tous les contenu existant correspondant à un artiste en particulier
-afficherCorrespondanceArtiste_label:BEGIN
+AFFICHERCORRESPONDANCEARTISTE_LABEL:BEGIN
 
-select Code_Barre,Numero_License,Titre,Support,Artiste.nom,Artiste.type
-from Contenu join Participe 
-on Contenu.Code_Barre =Participe.Contenu_Code_Barre and Contenu.Numero_License = Participe.Contenu_Numero_License
-join Artiste 
-on artiste.id=Participe.Artiste_id
-where Artiste.nom=artisteValNom;
+SELECT Code_Barre,Numero_License,Titre,Support,Artiste.nom,Artiste.type
+FROM Contenu JOIN Participe 
+ON Contenu.Code_Barre =Participe.Contenu_Code_Barre AND Contenu.Numero_License = Participe.Contenu_Numero_License
+JOIN Artiste 
+ON artiste.id=Participe.Artiste_id
+WHERE Artiste.nom=artisteValNom;
 
 
 END;
 $$
 
-drop procedure if exists afficherCorrespondanceGenre$$ 
-CREATE PROCEDURE afficherCorrespondanceGenre(IN genreValGenre varchar(45))
+DROP PROCEDURE IF EXISTS afficherCorrespondanceGenre$$ 
+CREATE PROCEDURE afficherCorrespondanceGenre(IN genreValGenre VARCHAR(45))
 # l'usager veut savoir tous les contenu existant correspondant à un genre en particulier
-afficherCorrespondanceGenre_label:BEGIN
+AFFICHERCORRESPONDANCEGENRE_LABEL:BEGIN
 
-select Code_Barre,Numero_License,Titre,Support,Genre.nom
-from Contenu join Décrit 
-on Contenu.Code_Barre =Décrit.Contenu_Code_Barre and Contenu.Numero_License = Décrit.Contenu_Numero_License
-join Genre 
-on genre.id=Décrit.Genre_id
-where Genre.nom=genreValGenre;
+SELECT Code_Barre,Numero_License,Titre,Support,Genre.nom
+FROM Contenu JOIN Décrit 
+ON Contenu.Code_Barre =Décrit.Contenu_Code_Barre AND Contenu.Numero_License = Décrit.Contenu_Numero_License
+JOIN Genre 
+ON genre.id=Décrit.Genre_id
+WHERE Genre.nom=genreValGenre;
 
 
 END;
 $$
 
 
-drop procedure if exists afficherCorrespondanceEditeur$$ 
-CREATE PROCEDURE afficherCorrespondanceEditeur(IN editeurValNom varchar(45))
+DROP PROCEDURE IF EXISTS afficherCorrespondanceEditeur$$ 
+CREATE PROCEDURE afficherCorrespondanceEditeur(IN editeurValNom VARCHAR(45))
 # l'usager veut savoir tous les contenu existant correspondant à un editeur en particulier
-afficherCorrespondanceEditeur_label:BEGIN
+AFFICHERCORRESPONDANCEEDITEUR_LABEL:BEGIN
 
-select Code_Barre,Numero_License,Titre,Support,Editeur.nom
-from Contenu join edite 
-on Contenu.Code_Barre =edite.Contenu_Code_Barre and Contenu.Numero_License = edite.Contenu_Numero_License
-join Editeur 
-on Editeur.id=edite.Editeur_id
-where Editeur.nom=editeurValNom;
+SELECT Code_Barre,Numero_License,Titre,Support,Editeur.nom
+FROM Contenu JOIN edite 
+ON Contenu.Code_Barre =edite.Contenu_Code_Barre AND Contenu.Numero_License = edite.Contenu_Numero_License
+JOIN Editeur 
+ON Editeur.id=edite.Editeur_id
+WHERE Editeur.nom=editeurValNom;
 
 
 END;
 $$
 
 
-drop procedure if exists afficherCorrespondanceEtablissement$$ 
-CREATE PROCEDURE afficherCorrespondanceEtablissement(IN etablissementValNom varchar(45))
+DROP PROCEDURE IF EXISTS afficherCorrespondanceEtablissement$$ 
+CREATE PROCEDURE afficherCorrespondanceEtablissement(IN etablissementValNom VARCHAR(45))
 # l'usager veut savoir tous les contenu existant correspondant à un etablissement en particulier
-afficherCorrespondanceEtablissement_label:BEGIN
+AFFICHERCORRESPONDANCEETABLISSEMENT_LABEL:BEGIN
 
-select Code_Barre,Numero_License,Titre,Support,Etablissement.nom
-from Contenu join possede 
-on Contenu.Code_Barre =possede.Contenu_Code_Barre and Contenu.Numero_License = possede.Contenu_Numero_License
-join Etablissement 
-on Etablissement.id=possede.Etablissement_id
-where Etablissement.nom=etablissementValNom;
+SELECT Code_Barre,Numero_License,Titre,Support,Etablissement.nom
+FROM Contenu JOIN possede 
+ON Contenu.Code_Barre =possede.Contenu_Code_Barre AND Contenu.Numero_License = possede.Contenu_Numero_License
+JOIN Etablissement 
+ON Etablissement.id=possede.Etablissement_id
+WHERE Etablissement.nom=etablissementValNom;
 
 
 END;
 $$
 
-drop procedure if exists afficherCorrespondanceTitre$$ 
-CREATE PROCEDURE afficherCorrespondanceTitre(IN contenuValTitre varchar(45))
+DROP PROCEDURE IF EXISTS afficherCorrespondanceTitre$$ 
+CREATE PROCEDURE afficherCorrespondanceTitre(IN contenuValTitre VARCHAR(45))
 # l'usager veut savoir tous les contenu existant correspondant à un Titre en particulier
-afficherCorrespondanceTitre_label:BEGIN
+AFFICHERCORRESPONDANCETITRE_LABEL:BEGIN
 
 
-select Code_Barre,Numero_License,Titre,Support
-from Contenu 
-where Contenu.Titre LIKE CONCAT("%",contenuValTitre,"%");
+SELECT Code_Barre,Numero_License,Titre,Support
+FROM Contenu 
+WHERE Contenu.Titre LIKE CONCAT("%",contenuValTitre,"%");
 
 
 END;
@@ -125,29 +125,29 @@ $$
 
 ############################################################################################################################
 
-drop procedure if exists afficherCorrespondanceMotCle$$ 
-CREATE PROCEDURE afficherCorrespondanceMotCle(IN MotCle varchar(45))
+DROP PROCEDURE IF EXISTS afficherCorrespondanceMotCle$$ 
+CREATE PROCEDURE afficherCorrespondanceMotCle(IN MotCle VARCHAR(45))
 # l'usager veut savoir tous les contenu existant correspondant à un Mot Cle en particulier
-afficherCorrespondanceMotCle:BEGIN
+AFFICHERCORRESPONDANCEMOTCLE:BEGIN
 
-select Code_Barre,Numero_License,Titre,Support,Etablissement.nom as Etablissement, Genre.nom as Genre, Artiste.nom as Artiste, Artiste.type as Role 
-from Contenu join possede 
-on Contenu.Code_Barre =possede.Contenu_Code_Barre and Contenu.Numero_License = possede.Contenu_Numero_License
-join Etablissement 
-on Etablissement.id=possede.Etablissement_id
+SELECT Code_Barre,Numero_License,Titre,Support,Etablissement.nom AS Etablissement, Genre.nom AS Genre, Artiste.nom AS Artiste, Artiste.type AS Role 
+FROM Contenu JOIN possede 
+ON Contenu.Code_Barre =possede.Contenu_Code_Barre AND Contenu.Numero_License = possede.Contenu_Numero_License
+JOIN Etablissement 
+ON Etablissement.id=possede.Etablissement_id
 
-join Décrit 
-on Contenu.Code_Barre =Décrit.Contenu_Code_Barre and Contenu.Numero_License = Décrit.Contenu_Numero_License
-join Genre 
-on genre.id=Décrit.Genre_id
-join Participe 
-on Contenu.Code_Barre =Participe.Contenu_Code_Barre and Contenu.Numero_License = Participe.Contenu_Numero_License
-join Artiste 
-on artiste.id=Participe.Artiste_id
+JOIN Décrit 
+ON Contenu.Code_Barre =Décrit.Contenu_Code_Barre AND Contenu.Numero_License = Décrit.Contenu_Numero_License
+JOIN Genre 
+ON genre.id=Décrit.Genre_id
+JOIN Participe 
+ON Contenu.Code_Barre =Participe.Contenu_Code_Barre AND Contenu.Numero_License = Participe.Contenu_Numero_License
+JOIN Artiste 
+ON artiste.id=Participe.Artiste_id
 
-where Etablissement.nom LIKE CONCAT("%",MotCle,"%")or
-      Genre.nom LIKE CONCAT("%",MotCle,"%") or
-      Artiste.nom LIKE CONCAT("%",MotCle,"%") or
+WHERE Etablissement.nom LIKE CONCAT("%",MotCle,"%")OR
+      Genre.nom LIKE CONCAT("%",MotCle,"%") OR
+      Artiste.nom LIKE CONCAT("%",MotCle,"%") OR
       Contenu.Titre LIKE CONCAT("%",MotCle,"%");
 
 
