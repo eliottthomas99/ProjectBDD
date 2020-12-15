@@ -1,4 +1,4 @@
-use bibliotheque;
+USE bibliotheque;
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS ajoutGenre $$
@@ -259,12 +259,12 @@ CREATE PROCEDURE ajoutLivre(
       editeurValEditeur VARCHAR(45),
       etablissementValNom VARCHAR(45))
 
-ajoutLivre_label :BEGIN
+AJOUTLIVRE_LABEL :BEGIN
       IF (
-            SELECT Count(*)
+            SELECT COUNT(*)
             FROM contenu
             WHERE Code_Barre = contenuValCodeBarre
-      ) >= 1 THEN leave ajoutLivre_label;
+      ) >= 1 THEN LEAVE AJOUTLIVRE_LABEL;
       END IF;
       INSERT INTO contenu (
                   Code_Barre,
@@ -313,12 +313,12 @@ CREATE PROCEDURE ajoutDVD(
       genreValGenre VARCHAR(45),
       etablissementValNom VARCHAR(45))
 
-ajoutDVD_label :BEGIN
+AJOUTDVD_LABEL :BEGIN
       IF (
-            SELECT Count(*)
+            SELECT COUNT(*)
             FROM contenu
             WHERE Code_Barre = contenuValCodeBarre
-      ) >= 1 THEN leave ajoutDVD_label;
+      ) >= 1 THEN LEAVE AJOUTDVD_LABEL;
       END IF;
       INSERT INTO contenu (
                   Code_Barre,
@@ -367,12 +367,12 @@ CREATE PROCEDURE ajoutEFilm(
       genreValGenre VARCHAR(45),
       etablissementValNom VARCHAR(45))
 
-ajoutEFilm_label :BEGIN
+AJOUTEFILM_LABEL :BEGIN
       IF (
-            SELECT Count(*)
+            SELECT COUNT(*)
             FROM contenu
             WHERE Numero_License = contenuValNumeroLicense
-      ) >= 1 THEN leave ajoutEFilm_label;
+      ) >= 1 THEN LEAVE AJOUTEFILM_LABEL;
       END IF;
       INSERT INTO contenu (
                   Code_Barre,
@@ -417,7 +417,7 @@ CREATE PROCEDURE ajoutAbonne(
       abonneValPrenom VARCHAR(45),
       abonneValAdresse VARCHAR(45))
 
-ajoutAbonne_label :BEGIN
+AJOUTABONNE_LABEL :BEGIN
       INSERT INTO abonne (nom, prenom, adresse, dateAdhesion, penalite)
       SELECT abonneValNom,
             abonneValPrenom,
