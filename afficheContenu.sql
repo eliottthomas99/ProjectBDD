@@ -74,6 +74,76 @@ END;
 $$
 
 
+drop procedure if exists afficherCorrespondanceEditeur$$ 
+CREATE PROCEDURE afficherCorrespondanceEditeur(IN editeurValNom varchar(45))
+# l'usager veut savoir tous les contenu existant correspondant à un editeur en particulier
+afficherCorrespondanceEditeur_label:BEGIN
+
+select Code_Barre,Numero_License,Titre,Support,Editeur.nom
+from Contenu join edite 
+on Contenu.Code_Barre =edite.Contenu_Code_Barre and Contenu.Numero_License = edite.Contenu_Numero_License
+join Editeur 
+on Editeur.id=edite.Editeur_id
+where Editeur.nom=editeurValNom;
+
+
+END;
+$$
+
+
+drop procedure if exists afficherCorrespondanceEtablissement$$ 
+CREATE PROCEDURE afficherCorrespondanceEtablissement(IN etablissementValNom varchar(45))
+# l'usager veut savoir tous les contenu existant correspondant à un etablissement en particulier
+afficherCorrespondanceEtablissement_label:BEGIN
+
+select Code_Barre,Numero_License,Titre,Support,Etablissement.nom
+from Contenu join possede 
+on Contenu.Code_Barre =possede.Contenu_Code_Barre and Contenu.Numero_License = possede.Contenu_Numero_License
+join Etablissement 
+on Etablissement.id=possede.Etablissement_id
+where Etablissement.nom=etablissementValNom;
+
+
+END;
+$$
+
+############################################################################################################################
+
+drop procedure if exists afficherCorrespondanceMotCle$$ 
+CREATE PROCEDURE afficherCorrespondanceMotCle(IN MotCle varchar(45))
+# l'usager veut savoir tous les contenu existant correspondant à un etablissement en particulier
+afficherCorrespondanceMotCle:BEGIN
+
+select Code_Barre,Numero_License,Titre,Support,Etablissement.nom as Etablissement, Genre.nom as Genre, Artiste.nom as Artiste, Artiste.type as Role,Editeur.nom as Editeur 
+from Contenu join possede 
+on Contenu.Code_Barre =possede.Contenu_Code_Barre and Contenu.Numero_License = possede.Contenu_Numero_License
+join Etablissement 
+on Etablissement.id=possede.Etablissement_id
+join edite 
+on Contenu.Code_Barre =edite.Contenu_Code_Barre and Contenu.Numero_License = edite.Contenu_Numero_License
+join Editeur 
+on Editeur.id=edite.Editeur_id
+join Décrit 
+on Contenu.Code_Barre =Décrit.Contenu_Code_Barre and Contenu.Numero_License = Décrit.Contenu_Numero_License
+join Genre 
+on genre.id=Décrit.Genre_id
+join Participe 
+on Contenu.Code_Barre =Participe.Contenu_Code_Barre and Contenu.Numero_License = Participe.Contenu_Numero_License
+join Artiste 
+on artiste.id=Participe.Artiste_id
+
+where Etablissement.nom=MotCle or
+      Editeur.nom=MotCle or 
+      Genre.nom=MotCle or
+      Artiste.nom=MotCle;
+
+
+END;
+$$
+
+
+
+
 
 
 
@@ -88,5 +158,8 @@ $$
 #CALL afficherNumerique();
 #CALL afficherPhysique();
 #CALL afficherCorrespondanceArtiste("Stendhal");
-CALL afficherCorrespondanceGenre("science fiction");
+#CALL afficherCorrespondanceGenre("science fiction");
+#CALL afficherCorrespondanceEditeur("Gallimard");
+#CALL afficherCorrespondanceEtablissement("ENSSAT");
+CALL afficherCorrespondanceMotCle("Stendhal");
 
