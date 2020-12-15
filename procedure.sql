@@ -168,6 +168,37 @@ CALL ajoutPossede(etablissementNom,possedeValCodeBarre,possedeValNumeroLicense);
 
 END;
 $$
+###########################################################################
+drop procedure if exists ajoutLienDecrit$$
+CREATE PROCEDURE ajoutLienDecrit(IN genreNom varchar(45), decritValCodeBarre INT, decritValNumeroLicense INT)
+
+BEGIN
+CALL ajoutGenre(genreNom);
+CALL ajoutDecrit(genreNom,decritValCodeBarre,decritValNumeroLicense);
+
+END;
+$$
+
+###########################################################################
+drop procedure if exists ajoutLienParticipe$$
+CREATE PROCEDURE ajoutLienParticipe(IN artisteNom varchar(45),artisteRole varchar(45), participeValCodeBarre INT, participeValNumeroLicense INT)
+
+BEGIN
+CALL ajoutArtiste(artisteNom,artisteRole);
+CALL ajoutParticipe(artisteNom,participeValCodeBarre,participeValNumeroLicense);
+
+END;
+$$
+###########################################################################
+drop procedure if exists ajoutLienEdite$$
+CREATE PROCEDURE ajoutLienEdite(IN EditeurNom varchar(45), EditeValCodeBarre INT, EditeValNumeroLicense INT)
+
+BEGIN
+CALL ajoutEditeur(EditeurNom);
+CALL ajoutEdite(EditeurNom,EditeValCodeBarre,EditeValNumeroLicense);
+
+END;
+$$
 
 
 
@@ -290,7 +321,11 @@ CALL ajoutPossede("ENSSAT",10,0);
 
 CALL ajoutDVD(50,"Nemo",26,"Andrew Stanton","Pixar","animation","ENSSAT");
 
-CALL ajoutLienPossede("Nokia",
+#CALL ajoutLienPossede("Nokia", 20,0);
+CALL ajoutLienDecrit("aventure", 50,0);
+CALL ajoutLienParticipe("Lee Unkrich","realisateur", 50,0);
+CALL ajoutLienEdite("Gallimard", 20,0);
+
 
 
 
