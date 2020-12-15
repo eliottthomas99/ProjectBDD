@@ -296,6 +296,89 @@ $$
 
 
 
+############################################################################
+#ajoutDVD(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValRealisateur,artisteValProducteur,genreValGenre)
+############################################################################
+
+drop procedure if exists ajoutEFilm$$
+CREATE PROCEDURE ajoutEFilm(IN contenuValCodeBarre INT, 
+							contenuValTitre varchar(45),
+							contenuValCodeCatalogue INT,
+                            artisteValRealisateur varchar(45),
+                            artisteValProducteur varchar(45),
+                            genreValGenre varchar(45),
+                            etablissementValNom varchar(45))
+
+ajoutEFilm_label:BEGIN
+
+
+IF (select Count(*) from contenu where Code_Barre=contenuValCodeBarre)>=1 THEN
+	leave ajoutEFilm_label;
+END IF;
+
+INSERT INTO contenu (Code_Barre,Numero_License,Titre,Type,Support,CodeCatalogue) 
+SELECT contenuValCodeBarre, 0, contenuValTitre,'numerique','EFilm', contenuValCodeCatalogue FROM DUAL 
+WHERE NOT EXISTS (SELECT * FROM contenu 
+      WHERE Code_Barre=contenuValCodeBarre
+            LIMIT 1) ;
+ 
+CALL ajoutArtiste(artisteValRealisateur,"realisateur");
+CALL ajoutArtiste(artisteValProducteur,"producteur");
+CALL ajoutGenre(genreValGenre);
+CALL ajoutEtablissement(etablissementValNom);
+
+#tables de relations
+CALL ajoutParticipe(artisteValRealisateur,contenuValCodeBarre,0);
+CALL ajoutParticipe(artisteValProducteur,contenuValCodeBarre,0);
+CALL ajoutDecrit(genreValGenre,contenuValCodeBarre,0);
+CALL ajoutPossede(etablissementValNom,contenuValCodeBarre,0);
+
+
+END;
+$$
+
+###########################################################################################################
+
+#ajoutAbonne(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValRealisateur,artisteValProducteur,genreValGenre)
+############################################################################
+/*
+drop procedure if exists ajoutEFilm$$
+CREATE PROCEDURE ajoutEFilm(IN contenuValCodeBarre INT, 
+							contenuValTitre varchar(45),
+							contenuValCodeCatalogue INT,
+                            artisteValRealisateur varchar(45),
+                            artisteValProducteur varchar(45),
+                            genreValGenre varchar(45),
+                            etablissementValNom varchar(45))
+
+ajoutEFilm_label:BEGIN
+
+
+IF (select Count(*) from contenu where Code_Barre=contenuValCodeBarre)>=1 THEN
+	leave ajoutEFilm_label;
+END IF;
+
+INSERT INTO contenu (Code_Barre,Numero_License,Titre,Type,Support,CodeCatalogue) 
+SELECT contenuValCodeBarre, 0, contenuValTitre,'numerique','EFilm', contenuValCodeCatalogue FROM DUAL 
+WHERE NOT EXISTS (SELECT * FROM contenu 
+      WHERE Code_Barre=contenuValCodeBarre
+            LIMIT 1) ;
+ 
+
+
+
+END;
+$$
+*/
+
+
+
+
+
+
+
+
+
 
 DELIMITER ;
 
@@ -325,6 +408,8 @@ CALL ajoutDVD(50,"Nemo",26,"Andrew Stanton","Pixar","animation","ENSSAT");
 CALL ajoutLienDecrit("aventure", 50,0);
 CALL ajoutLienParticipe("Lee Unkrich","realisateur", 50,0);
 CALL ajoutLienEdite("Gallimard", 20,0);
+
+CALL ajoutEFilm(60,"Star Wars Episode III",27,"George Lucas","Rick McCallum","science fiction","ENSSAT");
 
 
 
