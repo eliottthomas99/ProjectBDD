@@ -1,413 +1,501 @@
 use bibliotheque;
+DELIMITER $$
 
-delimiter $$
-drop procedure if exists ajoutGenre $$
-CREATE PROCEDURE ajoutGenre(IN genreVal varchar(45))
-
+DROP PROCEDURE IF EXISTS ajoutGenre $$
+CREATE PROCEDURE ajoutGenre(IN genreVal VARCHAR(45))
 BEGIN
+      INSERT INTO genre (nom)
+      SELECT genreVal
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM genre
+                  WHERE nom = genreVal
+                  LIMIT 1
+            );
+END;$$
 
-INSERT INTO genre (nom) 
-SELECT genreVal FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM genre 
-      WHERE nom=genreVal LIMIT 1) ;
-
-
-END;
-$$
-
-drop procedure if exists ajoutEditeur $$
-CREATE PROCEDURE ajoutEditeur(IN editeurVal varchar(45))
-
+DROP PROCEDURE IF EXISTS ajoutEditeur $$
+CREATE PROCEDURE ajoutEditeur(IN editeurVal VARCHAR(45))
 BEGIN
+      INSERT INTO editeur (nom)
+      SELECT editeurVal
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM editeur
+                  WHERE nom = editeurVal
+                  LIMIT 1
+            );
+END;$$
 
-INSERT INTO editeur (nom) 
-SELECT editeurVal FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM editeur 
-      WHERE nom=editeurVal LIMIT 1) ;
-
-
-END;
-$$
-
-
-drop procedure if exists ajoutArtiste$$
-CREATE PROCEDURE ajoutArtiste(IN artisteValNom varchar(45), artisteValType varchar(45))
-
+DROP PROCEDURE IF EXISTS ajoutArtiste $$
+CREATE PROCEDURE ajoutArtiste(
+      IN artisteValNom VARCHAR(45),
+      artisteValType VARCHAR(45)
+)
 BEGIN
+      INSERT INTO artiste (nom, type)
+      SELECT artisteValNom,
+            artisteValType
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM artiste
+                  WHERE nom = artisteValNom
+                        AND type = artisteValType
+                  LIMIT 1
+            );
+END;$$
 
-INSERT INTO artiste (nom,type) 
-SELECT artisteValNom,artisteValType FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM artiste 
-      WHERE nom=artisteValNom and type=artisteValType LIMIT 1) ;
-
-
-END;
-$$
-
-drop procedure if exists ajoutArtiste$$
-CREATE PROCEDURE ajoutArtiste(IN artisteValNom varchar(45), artisteValType varchar(45))
-
+DROP PROCEDURE IF EXISTS ajoutEtablissement $$
+CREATE PROCEDURE ajoutEtablissement(IN etablissementValNom VARCHAR(45))
 BEGIN
-
-INSERT INTO artiste (nom,type) 
-SELECT artisteValNom,artisteValType FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM artiste 
-      WHERE nom=artisteValNom and type=artisteValType LIMIT 1) ;
-
-
-END;
-$$
-#################################################################################################
-
-
-drop procedure if exists ajoutEtablissement$$
-CREATE PROCEDURE ajoutEtablissement(IN etablissementValNom varchar(45))
-
-BEGIN
-
-INSERT INTO etablissement (nom) 
-SELECT etablissementValNom FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM etablissement 
-      WHERE nom=etablissementValNom LIMIT 1) ;
-
-
-END;
-$$
-
-
-
+      INSERT INTO etablissement (nom)
+      SELECT etablissementValNom
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM etablissement
+                  WHERE nom = etablissementValNom
+                  LIMIT 1
+            );
+END;$$
 
 ##############################################################
 
-drop procedure if exists ajoutEdite$$
-CREATE PROCEDURE ajoutEdite(IN editeValNom varchar(45), editeValCodeBarre INT, editeValNumeroLicense INT)
-
+DROP PROCEDURE IF EXISTS ajoutEdite $$
+CREATE PROCEDURE ajoutEdite(
+      IN editeValNom VARCHAR(45),
+      editeValCodeBarre INT,
+      editeValNumeroLicense INT)
 BEGIN
+      INSERT INTO edite (
+                  Editeur_id,
+                  Contenu_Code_Barre,
+                  Contenu_Numero_License
+            )
+      SELECT (
+                  SELECT id
+                  FROM editeur
+                  WHERE nom = editeValNom
+            ),
+            editeValCodeBarre,
+            editeValNumeroLicense
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM edite
+                  WHERE Editeur_id =(
+                              SELECT id
+                              FROM editeur
+                              WHERE nom = editeValNom
+                        )
+                        AND Contenu_Code_Barre = editeValCodeBarre
+                        AND Contenu_Numero_License = editeValNumeroLicense
+                  LIMIT 1
+            );
+END;$$
 
-INSERT INTO edite (Editeur_id,Contenu_Code_Barre,Contenu_Numero_License) 
-SELECT (select id from editeur where nom =editeValNom),
-       editeValCodeBarre,
-       editeValNumeroLicense FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM edite 
-      WHERE Editeur_id=(select id from editeur where nom =editeValNom) and
-            Contenu_Code_Barre=editeValCodeBarre and
-            Contenu_Numero_License=editeValNumeroLicense
-            LIMIT 1) ;
-
-
-END;
-$$
-
-
-drop procedure if exists ajoutParticipe$$
-CREATE PROCEDURE ajoutParticipe(IN participeValNom varchar(45), participeValType varchar(45) ,participeValCodeBarre INT, participeValNumeroLicense INT )
-
+DROP PROCEDURE IF EXISTS ajoutParticipe $$
+CREATE PROCEDURE ajoutParticipe(
+      IN participeValNom VARCHAR(45),
+      participeValType VARCHAR(45),
+      participeValCodeBarre INT,
+      participeValNumeroLicense INT)
 BEGIN
+      INSERT INTO participe (
+                  Artiste_id,
+                  Contenu_Code_Barre,
+                  Contenu_Numero_License
+            )
+      SELECT (
+                  SELECT id
+                  FROM artiste
+                  WHERE nom = participeValNom
+                        AND type = participeValType
+            ),
+            participeValCodeBarre,
+            participeValNumeroLicense
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM participe
+                  WHERE Artiste_id =(
+                              SELECT id
+                              FROM artiste
+                              WHERE nom = participeValNom
+                                    AND type = participeValType
+                        )
+                        AND Contenu_Code_Barre = participeValCodeBarre
+                        AND Contenu_Numero_License = participeValNumeroLicense
+                  LIMIT 1
+            );
+END;$$
 
-INSERT INTO participe (Artiste_id,Contenu_Code_Barre,Contenu_Numero_License) 
-SELECT (select id from artiste where nom =participeValNom and type=participeValType ),
-       participeValCodeBarre,
-       participeValNumeroLicense FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM participe 
-      WHERE Artiste_id=(select id from artiste where nom =participeValNom and type=participeValType) and
-            Contenu_Code_Barre=participeValCodeBarre and
-            Contenu_Numero_License=participeValNumeroLicense
-            LIMIT 1) ;
-
-
-END;
-$$
-
-drop procedure if exists ajoutDecrit$$
-CREATE PROCEDURE ajoutDecrit(IN decritValNom varchar(45), decritValCodeBarre INT, decritValNumeroLicense INT)
-
+DROP PROCEDURE IF EXISTS ajoutDecrit $$
+CREATE PROCEDURE ajoutDecrit(
+      IN decritValNom VARCHAR(45),
+      decritValCodeBarre INT,
+      decritValNumeroLicense INT)
 BEGIN
+      INSERT INTO décrit (
+                  Genre_id,
+                  Contenu_Code_Barre,
+                  Contenu_Numero_License
+            )
+      SELECT (
+                  SELECT id
+                  FROM genre
+                  WHERE nom = decritValNom
+            ),
+            decritValCodeBarre,
+            decritValNumeroLicense
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM décrit
+                  WHERE Genre_id =(
+                              SELECT id
+                              FROM genre
+                              WHERE nom = decritValNom
+                        )
+                        AND Contenu_Code_Barre = decritValCodeBarre
+                        AND Contenu_Numero_License = decritValNumeroLicense
+                  LIMIT 1
+            );
+END;$$
 
-INSERT INTO décrit (Genre_id,Contenu_Code_Barre,Contenu_Numero_License) 
-SELECT (select id from genre where nom =decritValNom),
-       decritValCodeBarre,
-       decritValNumeroLicense FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM décrit 
-      WHERE Genre_id=(select id from genre where nom =decritValNom) and
-            Contenu_Code_Barre=decritValCodeBarre and
-            Contenu_Numero_License=decritValNumeroLicense
-            LIMIT 1) ;
+DROP PROCEDURE IF EXISTS ajoutPossede $$
+CREATE PROCEDURE ajoutPossede(
+      IN possedeValNom VARCHAR(45),
+      possedeValCodeBarre INT,
+      possedeValNumeroLicense INT)
+      BEGIN
+      INSERT INTO possede (
+                  Etablissement_id,
+                  Contenu_Code_Barre,
+                  Contenu_Numero_License
+            )
+      SELECT (
+                  SELECT id
+                  FROM etablissement
+                  WHERE nom = possedeValNom
+            ),
+            possedeValCodeBarre,
+            possedeValNumeroLicense
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM possede
+                  WHERE Etablissement_id =(
+                              SELECT id
+                              FROM etablissement
+                              WHERE nom = possedeValNom
+                        )
+                        AND # ligne non nécéssaire car selon le sujet un contenu ne peut être possédé que par un établissement. On le laisse en vue d une éventuelle évolution.
+                        Contenu_Code_Barre = possedeValCodeBarre
+                        AND Contenu_Numero_License = possedeValNumeroLicense
+                  LIMIT 1
+            );
+END;$$
 
-
-END;
-$$
-
-######################################################
-drop procedure if exists ajoutPossede$$
-CREATE PROCEDURE ajoutPossede(IN possedeValNom varchar(45), possedeValCodeBarre INT, possedeValNumeroLicense INT)
-
-BEGIN
-
-INSERT INTO possede (Etablissement_id,Contenu_Code_Barre,Contenu_Numero_License) 
-SELECT (select id from etablissement where nom =possedeValNom),
-       possedeValCodeBarre,
-       possedeValNumeroLicense FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM possede 
-      WHERE Etablissement_id=(select id from etablissement where nom =possedeValNom) and # ligne non nécéssaire car selon le sujet un contenu ne peut être possédé que par un établissement. On le laisse en vue d'une éventuelle évolution.
-            Contenu_Code_Barre=possedeValCodeBarre and
-            Contenu_Numero_License=possedeValNumeroLicense
-            LIMIT 1) ;
-
-
-END;
-$$
 ###########################################################################
 # Ajout&Relation
 ###########################################################################
-drop procedure if exists ajoutLienPossede$$
-CREATE PROCEDURE ajoutLienPossede(IN etablissementNom varchar(45), possedeValCodeBarre INT, possedeValNumeroLicense INT)
 
+DROP PROCEDURE IF EXISTS ajoutLienPossede $$
+CREATE PROCEDURE ajoutLienPossede(
+      IN etablissementNom VARCHAR(45),
+      possedeValCodeBarre INT,
+      possedeValNumeroLicense INT)
 BEGIN
-CALL ajoutEtablissement(etablissementNom);
-CALL ajoutPossede(etablissementNom,possedeValCodeBarre,possedeValNumeroLicense);
+      CALL ajoutEtablissement(etablissementNom);
+      CALL ajoutPossede(etablissementNom,possedeValCodeBarre,possedeValNumeroLicense);
+END;$$
 
-END;
-$$
-###########################################################################
-drop procedure if exists ajoutLienDecrit$$
-CREATE PROCEDURE ajoutLienDecrit(IN genreNom varchar(45), decritValCodeBarre INT, decritValNumeroLicense INT)
-
+DROP PROCEDURE IF EXISTS ajoutLienDecrit $$
+CREATE PROCEDURE ajoutLienDecrit(
+      IN genreNom VARCHAR(45),
+      decritValCodeBarre INT,
+      decritValNumeroLicense INT)
 BEGIN
-CALL ajoutGenre(genreNom);
-CALL ajoutDecrit(genreNom,decritValCodeBarre,decritValNumeroLicense);
+      CALL ajoutGenre(genreNom);
+      CALL ajoutDecrit(genreNom,decritValCodeBarre,decritValNumeroLicense);
+END;$$
 
-END;
-$$
-
-###########################################################################
-drop procedure if exists ajoutLienParticipe$$
-CREATE PROCEDURE ajoutLienParticipe(IN artisteNom varchar(45),artisteRole varchar(45), participeValCodeBarre INT, participeValNumeroLicense INT)
-
+DROP PROCEDURE IF EXISTS ajoutLienParticipe $$
+CREATE PROCEDURE ajoutLienParticipe(
+      IN artisteNom VARCHAR(45),
+      artisteRole VARCHAR(45),
+      participeValCodeBarre INT,
+      participeValNumeroLicense INT)
 BEGIN
-CALL ajoutArtiste(artisteNom,artisteRole);
-CALL ajoutParticipe(artisteNom,artisteRole,participeValCodeBarre,participeValNumeroLicense);
+      CALL ajoutArtiste(artisteNom, artisteRole);
+      CALL ajoutParticipe(artisteNom,artisteRole,participeValCodeBarre,participeValNumeroLicense);
+END;$$
 
-END;
-$$
-###########################################################################
-drop procedure if exists ajoutLienEdite$$
-CREATE PROCEDURE ajoutLienEdite(IN EditeurNom varchar(45), EditeValCodeBarre INT, EditeValNumeroLicense INT)
-
+DROP PROCEDURE IF EXISTS ajoutLienEdite $$
+CREATE PROCEDURE ajoutLienEdite(
+      IN EditeurNom VARCHAR(45),
+      EditeValCodeBarre INT,
+      EditeValNumeroLicense INT)
 BEGIN
-CALL ajoutEditeur(EditeurNom);
-CALL ajoutEdite(EditeurNom,EditeValCodeBarre,EditeValNumeroLicense);
-
-END;
-$$
-
-
-
-
-
-
-
-
+      CALL ajoutEditeur(EditeurNom);
+      CALL ajoutEdite(EditeurNom,EditeValCodeBarre,EditeValNumeroLicense);
+END;$$
 
 ############################################################################
 #ajoutLivre(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValAuteur,genreValGenre,editeurValEditeur)
-############################################################################
-drop procedure if exists ajoutLivre$$
-CREATE PROCEDURE ajoutLivre(IN contenuValCodeBarre INT, 
-							contenuValTitre varchar(45),
-							contenuValCodeCatalogue INT,
-                            artisteValAuteur varchar(45),
-                            genreValGenre varchar(45),
-                            editeurValEditeur varchar(45),
-                            etablissementValNom varchar(45))
+###########################################################################
 
-ajoutLivre_label:BEGIN
+DROP PROCEDURE IF EXISTS ajoutLivre $$
+CREATE PROCEDURE ajoutLivre(
+      IN contenuValCodeBarre INT,
+      contenuValTitre VARCHAR(45),
+      contenuValCodeCatalogue INT,
+      artisteValAuteur VARCHAR(45),
+      genreValGenre VARCHAR(45),
+      editeurValEditeur VARCHAR(45),
+      etablissementValNom VARCHAR(45))
 
+ajoutLivre_label :BEGIN
+      IF (
+            SELECT Count(*)
+            FROM contenu
+            WHERE Code_Barre = contenuValCodeBarre
+      ) >= 1 THEN leave ajoutLivre_label;
+      END IF;
+      INSERT INTO contenu (
+                  Code_Barre,
+                  Numero_License,
+                  Titre,
+                  Type,
+                  Support,
+                  CodeCatalogue
+            )
+      SELECT contenuValCodeBarre,
+            0,
+            contenuValTitre,
+            'physique',
+            'livre',
+            contenuValCodeCatalogue
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM contenu
+                  WHERE Code_Barre = contenuValCodeBarre
+                  LIMIT 1
+            );
+      CALL ajoutArtiste(artisteValAuteur, "ecrivain");
+      CALL ajoutGenre(genreValGenre);
+      CALL ajoutEditeur(editeurValEditeur);
+      CALL ajoutEtablissement(etablissementValNom);
 
-IF (select Count(*) from contenu where Code_Barre=contenuValCodeBarre)>=1 THEN
-	leave ajoutLivre_label;
-END IF;
-
-INSERT INTO contenu (Code_Barre,Numero_License,Titre,Type,Support,CodeCatalogue) 
-SELECT contenuValCodeBarre, 0, contenuValTitre,'physique','livre', contenuValCodeCatalogue FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM contenu 
-      WHERE Code_Barre=contenuValCodeBarre
-            LIMIT 1) ;
- 
-CALL ajoutArtiste(artisteValAuteur,"ecrivain");
-CALL ajoutGenre(genreValGenre);
-CALL ajoutEditeur(editeurValEditeur);
-CALL ajoutEtablissement(etablissementValNom);
-
-#tables de relations
-CALL ajoutEdite(editeurValEditeur,contenuValCodeBarre,0);
-CALL ajoutParticipe(artisteValAuteur,"ecrivain",contenuValCodeBarre,0);
-CALL ajoutDecrit(genreValGenre,contenuValCodeBarre,0);
-CALL ajoutPossede(etablissementValNom,contenuValCodeBarre,0);
-
-
-END;
-$$
-
-###########################################################################################################
-
-############################################################################
-#ajoutDVD(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValRealisateur,artisteValProducteur,genreValGenre)
-############################################################################
-
-drop procedure if exists ajoutDVD$$
-CREATE PROCEDURE ajoutDVD(IN contenuValCodeBarre INT, 
-							contenuValTitre varchar(45),
-							contenuValCodeCatalogue INT,
-                            artisteValRealisateur varchar(45),
-                            artisteValProducteur varchar(45),
-                            genreValGenre varchar(45),
-                            etablissementValNom varchar(45))
-
-ajoutDVD_label:BEGIN
-
-
-IF (select Count(*) from contenu where Code_Barre=contenuValCodeBarre)>=1 THEN
-	leave ajoutDVD_label;
-END IF;
-
-INSERT INTO contenu (Code_Barre,Numero_License,Titre,Type,Support,CodeCatalogue) 
-SELECT contenuValCodeBarre, 0, contenuValTitre,'physique','DVD', contenuValCodeCatalogue FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM contenu 
-      WHERE Code_Barre=contenuValCodeBarre
-            LIMIT 1) ;
- 
-CALL ajoutArtiste(artisteValRealisateur,"realisateur");
-CALL ajoutArtiste(artisteValProducteur,"producteur");
-CALL ajoutGenre(genreValGenre);
-CALL ajoutEtablissement(etablissementValNom);
-
-#tables de relations
-CALL ajoutParticipe(artisteValRealisateur,"realisateur",contenuValCodeBarre,0);
-CALL ajoutParticipe(artisteValProducteur,"producteur",contenuValCodeBarre,0);
-CALL ajoutDecrit(genreValGenre,contenuValCodeBarre,0);
-CALL ajoutPossede(etablissementValNom,contenuValCodeBarre,0);
-
-
-END;
-$$
-
-###########################################################################################################
-
-
-
+      #tables de relations
+      CALL ajoutEdite(editeurValEditeur, contenuValCodeBarre, 0);
+      CALL ajoutParticipe(artisteValAuteur, "ecrivain", contenuValCodeBarre, 0);
+      CALL ajoutDecrit(genreValGenre, contenuValCodeBarre, 0);
+      CALL ajoutPossede(etablissementValNom, contenuValCodeBarre, 0);
+END;$$
 
 ############################################################################
 #ajoutDVD(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValRealisateur,artisteValProducteur,genreValGenre)
 ############################################################################
 
-drop procedure if exists ajoutEFilm$$
-CREATE PROCEDURE ajoutEFilm(IN contenuValNumeroLicense INT, 
-							contenuValTitre varchar(45),
-							contenuValCodeCatalogue INT,
-                            artisteValRealisateur varchar(45),
-                            artisteValProducteur varchar(45),
-                            genreValGenre varchar(45),
-                            etablissementValNom varchar(45))
+DROP PROCEDURE IF EXISTS ajoutDVD $$
+CREATE PROCEDURE ajoutDVD(
+      IN contenuValCodeBarre INT,
+      contenuValTitre VARCHAR(45),
+      contenuValCodeCatalogue INT,
+      artisteValRealisateur VARCHAR(45),
+      artisteValProducteur VARCHAR(45),
+      genreValGenre VARCHAR(45),
+      etablissementValNom VARCHAR(45))
 
-ajoutEFilm_label:BEGIN
+ajoutDVD_label :BEGIN
+      IF (
+            SELECT Count(*)
+            FROM contenu
+            WHERE Code_Barre = contenuValCodeBarre
+      ) >= 1 THEN leave ajoutDVD_label;
+      END IF;
+      INSERT INTO contenu (
+                  Code_Barre,
+                  Numero_License,
+                  Titre,
+                  Type,
+                  Support,
+                  CodeCatalogue
+            )
+      SELECT contenuValCodeBarre,
+            0,
+            contenuValTitre,
+            'physique',
+            'DVD',
+            contenuValCodeCatalogue
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM contenu
+                  WHERE Code_Barre = contenuValCodeBarre
+                  LIMIT 1
+            );
+      CALL ajoutArtiste(artisteValRealisateur, "realisateur");
+      CALL ajoutArtiste(artisteValProducteur, "producteur");
+      CALL ajoutGenre(genreValGenre);
+      CALL ajoutEtablissement(etablissementValNom);
 
+      #tables de relations
+      CALL ajoutParticipe(artisteValRealisateur, "realisateur", contenuValCodeBarre, 0);
+      CALL ajoutParticipe(artisteValProducteur, "producteur", contenuValCodeBarre, 0);
+      CALL ajoutDecrit(genreValGenre, contenuValCodeBarre, 0);
+      CALL ajoutPossede(etablissementValNom, contenuValCodeBarre, 0);
+END;$$
 
-IF (select Count(*) from contenu where Numero_License=contenuValNumeroLicense)>=1 THEN
-	leave ajoutEFilm_label;
-END IF;
+############################################################################
+#ajoutDVD(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValRealisateur,artisteValProducteur,genreValGenre)
+############################################################################
 
-INSERT INTO contenu (Code_Barre,Numero_License,Titre,Type,Support,CodeCatalogue) 
-SELECT 0, contenuValNumeroLicense, contenuValTitre,'numerique','EFilm', contenuValCodeCatalogue FROM DUAL 
-WHERE NOT EXISTS (SELECT * FROM contenu 
-      WHERE Numero_License=contenuValNumeroLicense
-            LIMIT 1) ;
- 
-CALL ajoutArtiste(artisteValRealisateur,"realisateur");
-CALL ajoutArtiste(artisteValProducteur,"producteur");
-CALL ajoutGenre(genreValGenre);
-CALL ajoutEtablissement(etablissementValNom);
+DROP PROCEDURE IF EXISTS ajoutEFilm $$
+CREATE PROCEDURE ajoutEFilm(
+      IN contenuValNumeroLicense INT,
+      contenuValTitre VARCHAR(45),
+      contenuValCodeCatalogue INT,
+      artisteValRealisateur VARCHAR(45),
+      artisteValProducteur VARCHAR(45),
+      genreValGenre VARCHAR(45),
+      etablissementValNom VARCHAR(45))
 
-#tables de relations
-CALL ajoutParticipe(artisteValRealisateur,"realisateur",0,contenuValNumeroLicense);
-CALL ajoutParticipe(artisteValProducteur,"producteur",0,contenuValNumeroLicense);
-CALL ajoutDecrit(genreValGenre,0,contenuValNumeroLicense);
-CALL ajoutPossede(etablissementValNom,0,contenuValNumeroLicense);
+ajoutEFilm_label :BEGIN
+      IF (
+            SELECT Count(*)
+            FROM contenu
+            WHERE Numero_License = contenuValNumeroLicense
+      ) >= 1 THEN leave ajoutEFilm_label;
+      END IF;
+      INSERT INTO contenu (
+                  Code_Barre,
+                  Numero_License,
+                  Titre,
+                  Type,
+                  Support,
+                  CodeCatalogue
+            )
+      SELECT 0,
+            contenuValNumeroLicense,
+            contenuValTitre,
+            'numerique',
+            'EFilm',
+            contenuValCodeCatalogue
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM contenu
+                  WHERE Numero_License = contenuValNumeroLicense
+                  LIMIT 1
+            );
+      CALL ajoutArtiste(artisteValRealisateur, "realisateur");
+      CALL ajoutArtiste(artisteValProducteur, "producteur");
+      CALL ajoutGenre(genreValGenre);
+      CALL ajoutEtablissement(etablissementValNom);
 
-
-END;
-$$
+      #tables de relations
+      CALL ajoutParticipe(artisteValRealisateur, "realisateur", 0, contenuValNumeroLicense);
+      CALL ajoutParticipe(artisteValProducteur, "producteur", 0, contenuValNumeroLicense);
+      CALL ajoutDecrit(genreValGenre, 0, contenuValNumeroLicense);
+      CALL ajoutPossede(etablissementValNom, 0, contenuValNumeroLicense);
+END;$$
 
 ###########################################################################################################
-
 #ajoutAbonne(abonneValNom,abonneValPrenom,abonneValAdresse)
 ############################################################################
 
-drop procedure if exists ajoutAbonne$$
-CREATE PROCEDURE ajoutAbonne(IN abonneValNom varchar(45),
-                            abonneValPrenom varchar(45),
-                            abonneValAdresse varchar(45))
+DROP PROCEDURE IF EXISTS ajoutAbonne $$
+CREATE PROCEDURE ajoutAbonne(
+      IN abonneValNom VARCHAR(45),
+      abonneValPrenom VARCHAR(45),
+      abonneValAdresse VARCHAR(45))
 
-ajoutAbonne_label:BEGIN
-
-INSERT INTO abonne (nom,prenom,adresse,dateAdhesion,penalite)
-SELECT abonneValNom, abonneValPrenom, abonneValAdresse, CURDATE(),0 FROM DUAL ;
- 
-
-
-
+ajoutAbonne_label :BEGIN
+      INSERT INTO abonne (nom, prenom, adresse, dateAdhesion, penalite)
+      SELECT abonneValNom,
+            abonneValPrenom,
+            abonneValAdresse,
+            CURDATE(),
+            0
+      FROM DUAL;
 END;
 $$
 
 
+DELIMITER;
 
-
-
-
-
-
-
-
-
-DELIMITER ;
-
-
-CALL ajoutLivre(10,"Harry Potter a l'ecole des sorciers",19,"JK Rowling","fantastique","Gallimard jeunesse","ENSSAT");
-
-CALL ajoutLivre(20,"Titatic",20,"Stendhal","Roman","Anthony Ingels","ENSSAT");
-
+CALL ajoutLivre(
+      10,
+      "Harry Potter a l'ecole des sorciers",
+      19,
+      "JK Rowling",
+      "fantastique",
+      "Gallimard jeunesse",
+      "ENSSAT"
+);
+CALL ajoutLivre(
+      20,
+      "Titatic",
+      20,
+      "Stendhal",
+      "Roman",
+      "Anthony Ingels",
+      "ENSSAT"
+);
 CALL ajoutGenre('policier');
-
 CALL ajoutEditeur('Hachette');
 CALL ajoutEditeur('Gallimard');
-
-CALL ajoutArtiste('Napoleon Hill','ecrivain');
-
-CALL ajoutEdite('Gallimard',20,0);
-
-CALL ajoutParticipe('Napoleon Hill',"ecrivain",20,0);
-
-CALL ajoutLivre(30,"La Chartreuse de Parme",24,"Stendhal","Roman","Ambroise Dupont","Orange");
-
-CALL ajoutLivre(40,"Le rouge et le noir",25,"Stendhal","Roman","Levasseur","IUT");
-
+CALL ajoutArtiste('Napoleon Hill', 'ecrivain');
+CALL ajoutEdite('Gallimard', 20, 0);
+CALL ajoutParticipe('Napoleon Hill', "ecrivain", 20, 0);
+CALL ajoutLivre(
+      30,
+      "La Chartreuse de Parme",
+      24,
+      "Stendhal",
+      "Roman",
+      "Ambroise Dupont",
+      "Orange"
+);
+CALL ajoutLivre(
+      40,
+      "Le rouge et le noir",
+      25,
+      "Stendhal",
+      "Roman",
+      "Levasseur",
+      "IUT"
+);
 CALL ajoutEtablissement("Orange");
-
-CALL ajoutPossede("ENSSAT",20,0);
-CALL ajoutPossede("ENSSAT",10,0);
-
-CALL ajoutDVD(50,"Nemo",26,"Andrew Stanton","Pixar","animation","ENSSAT");
-
-
+CALL ajoutPossede("ENSSAT", 20, 0);
+CALL ajoutPossede("ENSSAT", 10, 0);
+CALL ajoutDVD(
+      50,
+      "Nemo",
+      26,
+      "Andrew Stanton",
+      "Pixar",
+      "animation",
+      "ENSSAT"
+);
 #CALL ajoutLienPossede("Nokia", 20,0);
-CALL ajoutLienDecrit("aventure", 50,0);
-CALL ajoutLienParticipe("Lee Unkrich","realisateur", 50,0);
-CALL ajoutLienEdite("Gallimard", 20,0);
-
-CALL ajoutEFilm(60,"Star Wars Episode III",27,"George Lucas","Rick McCallum","science fiction","ENSSAT");
-CALL ajoutAbonne("THOMAS","Julien","4 place des Ursulines")
-
-
-
-
-
-
+CALL ajoutLienDecrit("aventure", 50, 0);
+CALL ajoutLienParticipe("Lee Unkrich", "realisateur", 50, 0);
+CALL ajoutLienEdite("Gallimard", 20, 0);
+CALL ajoutEFilm(
+      60,
+      "Star Wars Episode III",
+      27,
+      "George Lucas",
+      "Rick McCallum",
+      "science fiction",
+      "ENSSAT"
+);
+CALL ajoutAbonne("THOMAS", "Julien", "4 place des Ursulines")
