@@ -16,7 +16,7 @@ CREATE PROCEDURE emprunterContenu(IN contenuValCodeBarre INT, contenuValNumeroLi
 # l'usager emprunte un contenu
 EMPRUNTERCONTENU_LABEL:BEGIN
 # On regarde si l abonne a deja 5 ou plus emprunts en cours
-IF (SELECT COUNT(*) FROM emprunt WHERE Abonne_numero = abonneValNumero) >= 5 THEN
+IF (SELECT COUNT(*) FROM emprunt WHERE Abonne_numero = abonneValNumero) >= 5 THEN # TODO passer par une var globale pour calibrer la penalite
 	LEAVE EMPRUNTERCONTENU_LABEL;	
 END IF;
 # Sinon on regarde le niveau de penalite de l abonne
