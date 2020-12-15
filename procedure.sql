@@ -504,5 +504,7 @@ CALL ajoutEFilm(
       "science fiction",
       "ENSSAT"
 );
+CALL ajoutEFilm(70,"Star Wars Episode III",27,"George Lucas","Rick McCallum","science fiction","ENSSAT");
+
 CALL ajoutAbonne("THOMAS", "Julien", "jthomas@enssat.fr");
 CALL ajoutAbonne("THOMAS","Jeremy","jthoma1@enssat.fr");

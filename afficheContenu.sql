@@ -174,6 +174,6 @@ $$
 #CALL afficherCorrespondanceGenre("science fiction");
 #CALL afficherCorrespondanceEditeur("Gallimard");
 #CALL afficherCorrespondanceEtablissement("ENSSAT");
-CALL afficherCorrespondanceMotCle("st");
+CALL afficherCorrespondanceMotCle("star wars");
 #CALL afficherCorrespondanceTitre("st");
 
