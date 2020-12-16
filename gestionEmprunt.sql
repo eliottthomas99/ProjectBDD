@@ -143,7 +143,7 @@ RENOUVELEREMPRUNT_LABEL:BEGIN
 	ELSEIF (SELECT renouvellement FROM emprunt WHERE Contenu_Code_Barre = contenuValCodeBarre AND Contenu_Numero_License = contenuValNumeroLicense AND date_retour IS NULL) >= @maxRenouvellement THEN
 		LEAVE RENOUVELEREMPRUNT_LABEL;
 	END IF;
-    # Si on est dans le dernier crenau de temps, alors on peu etendre l emprunt
+    # Si on est dans le dernier crenau de temps, alors on peut etendre l emprunt
 	SET @dateDebut = (SELECT date_pret FROM emprunt WHERE Contenu_Code_Barre = contenuValCodeBarre AND Contenu_Numero_License = contenuValNumeroLicense and date_retour IS NULL);
 	IF (SELECT support FROM contenu WHERE Code_Barre = contenuValCodeBarre AND Numero_License = contenuValNumeroLicense) = "livre" OR
 		(SELECT support FROM contenu WHERE Code_Barre = contenuValCodeBarre AND Numero_License = contenuValNumeroLicense) = "ebook" THEN
@@ -167,7 +167,7 @@ $$
 
 
 DROP PROCEDURE IF EXISTS renouvelerAbonnement$$ 
-CREATE PROCEDURE renouvelerAbonnement(IN abonneValAdresse VARCHAR(45))
+CREATE PROCEDURE renouvelerAbonnement(IN abonneValAdresse VARCHAR(45)) # TODO passer par ID au lieu d adresse ?
 # permet de renouveler un emprunt si personne ne l a reserve
 RENOUVELERABONNEMENT_LABEL:BEGIN
 	IF NOT EXISTS (SELECT * FROM abonne WHERE adresse = abonneValAdresse) THEN
@@ -181,7 +181,7 @@ $$
 DROP PROCEDURE IF EXISTS echeancier$$ 
 CREATE PROCEDURE echeancier()
 # Affiche la liste de tous les documents qui devraient etre rendu ainsi que les abonnes les possedant
-ECHEANCIER:BEGIN
+ECHEANCIER_LABEL:BEGIN
 	SELECT nom, prenom, adresse AS email, Code_Barre,Numero_License, Titre, Support FROM Contenu
     JOIN emprunt 
 		ON Contenu.Code_Barre = emprunt.Contenu_Code_Barre AND Contenu.Numero_License = emprunt.Contenu_Numero_License
@@ -197,7 +197,7 @@ $$
 DROP PROCEDURE IF EXISTS empruntCount$$ 
 CREATE PROCEDURE empruntCount()
 # Affiche le nombre de contenus en cours d emprunt par bibliotheque
-ECHEANCIER:BEGIN
+empruntCount_LABEL:BEGIN
 	SELECT COUNT(*) as emprunts, etablissement.nom FROM Contenu
     JOIN possede 
 		ON Contenu.Code_Barre = possede.Contenu_Code_Barre AND Contenu.Numero_License = possede.Contenu_Numero_License
@@ -210,10 +210,11 @@ ECHEANCIER:BEGIN
 END;
 $$
 
+# FIXME
 DROP PROCEDURE IF EXISTS clientEmpruntantCount$$ 
 CREATE PROCEDURE clientEmpruntantCount()
 # Affiche le nombre de clients ayant au moins un emprunt en cours
-ECHEANCIER:BEGIN
+clientEmpruntantCount_LABEL:BEGIN
 	SELECT COUNT(*) as "emprunts en cours" FROM Contenu
     JOIN emprunt 
 		ON Contenu.Code_Barre = emprunt.Contenu_Code_Barre AND Contenu.Numero_License = emprunt.Contenu_Numero_License
@@ -223,8 +224,8 @@ $$
 
 DROP PROCEDURE IF EXISTS contenuPopulaire$$ 
 CREATE PROCEDURE contenuPopulaire(IN limite INT)
-# Affiche le nombre de clients ayant au moins un emprunt en cours
-ECHEANCIER:BEGIN
+# Affiche le nombre d emprunt qu un contenu a recu
+contenuPopulaire_LABEL:BEGIN
     SELECT COUNT(*) AS emprunts, titre, support FROM contenu
     JOIN emprunt 
 		ON Contenu.Code_Barre = emprunt.Contenu_Code_Barre AND Contenu.Numero_License = emprunt.Contenu_Numero_License
@@ -236,12 +237,12 @@ $$
 
 DROP PROCEDURE IF EXISTS supportPopulaire$$ 
 CREATE PROCEDURE supportPopulaire(IN limite INT)
-# Affiche le nombre de clients ayant au moins un emprunt en cours
-ECHEANCIER:BEGIN
+# Affiche le nombre d ermprunts par support
+supportPopulaire_LABEL:BEGIN
     SELECT COUNT(*) AS emprunts, support FROM contenu
     JOIN emprunt 
 		ON Contenu.Code_Barre = emprunt.Contenu_Code_Barre AND Contenu.Numero_License = emprunt.Contenu_Numero_License
-    GROUP BY support # catalogue ou code barre et numero license ?
+    GROUP BY support 
     ORDER BY COUNT(*) DESC LIMIT limite;
 END;
 $$
