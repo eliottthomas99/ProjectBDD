@@ -167,13 +167,13 @@ $$
 
 
 DROP PROCEDURE IF EXISTS renouvelerAbonnement$$ 
-CREATE PROCEDURE renouvelerAbonnement(IN abonneValAdresse VARCHAR(45)) # TODO passer par ID au lieu d adresse ?
+CREATE PROCEDURE renouvelerAbonnement(IN abonneValNumero INT)
 # permet de renouveler un emprunt si personne ne l a reserve
 RENOUVELERABONNEMENT_LABEL:BEGIN
-	IF NOT EXISTS (SELECT * FROM abonne WHERE adresse = abonneValAdresse) THEN
+	IF NOT EXISTS (SELECT * FROM abonne WHERE numero = abonneValNumero) THEN
 		LEAVE RENOUVELERABONNEMENT_LABEL;
 	END IF;
-	UPDATE abonne SET dateAdhesion = CURDATE() WHERE adresse = abonneValAdresse;
+	UPDATE abonne SET dateAdhesion = CURDATE() WHERE numero = abonneValNumero;
 END;
 $$
 
@@ -210,12 +210,11 @@ empruntCount_LABEL:BEGIN
 END;
 $$
 
-# FIXME
 DROP PROCEDURE IF EXISTS clientEmpruntantCount$$ 
 CREATE PROCEDURE clientEmpruntantCount()
 # Affiche le nombre de clients ayant au moins un emprunt en cours
 clientEmpruntantCount_LABEL:BEGIN
-	SELECT COUNT(*) as "emprunts en cours" FROM Contenu
+	SELECT COUNT(DISTINCT emprunt.Abonne_numero) as "emprunts en cours" FROM Contenu
     JOIN emprunt 
 		ON Contenu.Code_Barre = emprunt.Contenu_Code_Barre AND Contenu.Numero_License = emprunt.Contenu_Numero_License
     WHERE emprunt.date_retour IS NULL;
@@ -287,8 +286,8 @@ CALL renouvelerEmprunt(0,70);
 
 /*
 # renouvelement abonnement d une personne pas abonne et d un abonne
-CALL renouvelerAbonnement("athomas@enssat.fr");
-CALL renouvelerAbonnement("jthomas@enssat.fr");
+CALL renouvelerAbonnement(1);
+CALL renouvelerAbonnement(11);
 */
 
 #CALL echeancier();
