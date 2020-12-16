@@ -155,6 +155,44 @@ END;
 $$
 
 
+DROP PROCEDURE IF EXISTS afficherDispo$$ 
+CREATE PROCEDURE afficherDispo()
+# l'usager veut connaitre les contenu disponibles
+AFFICHERDISPO_LABEL:BEGIN
+
+
+SELECT * FROM contenu 
+
+WHERE (Code_Barre,Numero_License) NOT IN 
+
+
+(SELECT Contenu_Code_Barre,Contenu_Numero_License 
+FROM Emprunt 
+WHERE date_retour IS NULL);
+
+
+END;
+$$
+
+DROP PROCEDURE IF EXISTS afficherEmprunt$$ 
+CREATE PROCEDURE afficherEmprunt()
+# l'usager veut connaitre les contenu disponibles
+AFFICHEREMPRUNT_LABEL:BEGIN
+
+
+SELECT * FROM contenu 
+
+WHERE (Code_Barre,Numero_License) IN 
+
+
+(SELECT Contenu_Code_Barre,Contenu_Numero_License 
+FROM Emprunt 
+WHERE date_retour IS NULL);
+
+
+END;
+$$
+
 
 
 
@@ -174,6 +212,6 @@ $$
 #CALL afficherCorrespondanceGenre("science fiction");
 #CALL afficherCorrespondanceEditeur("Gallimard");
 #CALL afficherCorrespondanceEtablissement("ENSSAT");
-CALL afficherCorrespondanceMotCle("star wars");
+#CALL afficherCorrespondanceMotCle("star wars");
 #CALL afficherCorrespondanceTitre("st");
-
+CALL afficherEmprunt();

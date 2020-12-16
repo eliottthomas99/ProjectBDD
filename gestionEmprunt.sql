@@ -77,24 +77,6 @@ END;
 $$
 
 
-DROP PROCEDURE IF EXISTS afficherDispo$$ 
-CREATE PROCEDURE afficherDispo()
-# l'usager veut connaitre les contenu disponibles
-AFFICHERDISPO_LABEL:BEGIN
-
-
-SELECT * FROM contenu 
-
-WHERE (Code_Barre,Numero_License) NOT IN 
-
-
-(SELECT Contenu_Code_Barre,Contenu_Numero_License 
-FROM Emprunt 
-WHERE date_retour IS NULL);
-
-
-END;
-$$
 
 
 DELIMITER ;
@@ -107,7 +89,7 @@ CALL emprunterContenu(50,0,12);
 CALL emprunterContenu(60,0,12); # refuse l emprunt d un contenu car il y a deja 5 emprunts en cours
 
 #CALL rendreContenu(0,60);
-#CALL afficherDispo();
+
 
 #CALL nombreEmprunt(12);
 
@@ -115,6 +97,6 @@ CALL emprunterContenu(60,0,12); # refuse l emprunt d un contenu car il y a deja 
 #CALL emprunterContenu(0,70,11); # ne devrait pas fonctionner car penalite trop haute
 
 # je rend en retard
-CALL emprunterContenu(0,70,11);
+#CALL emprunterContenu(0,70,11);
 #UPDATE `bibliotheque`.`emprunt` SET `date_pret` = '2020-01-01' WHERE (`Contenu_Code_Barre` = '0000000000') and (`Contenu_Numero_License` = '0000000070') and (`Abonne_numero` = '11') and (`date_pret` = '2020-12-16');
 #CALL rendreContenu(0,70);
