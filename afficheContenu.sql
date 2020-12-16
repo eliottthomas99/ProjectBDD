@@ -20,7 +20,8 @@ CREATE PROCEDURE afficherNumerique()
 
 AFFICHERNUMERIQUE_LABEL:BEGIN
 
-SELECT Code_Barre,Numero_License,Titre,Support 
+SELECT Code_Barre,Numero_License,Titre,Support ,codeCatalogue,
+ (select count(*) from emprunt where Contenu_Code_Barre=Code_Barre and Contenu_Numero_License=Numero_License and date_retour is null) as emprunté
 FROM Contenu
 WHERE Type="numerique"; 
 # l'usager veut savoir tous les contenu existant en numerique
@@ -33,7 +34,8 @@ CREATE PROCEDURE afficherPhysique()
 
 AFFICHERPHYSIQUE_LABEL:BEGIN
 
-SELECT Code_Barre,Numero_License,Titre,Support 
+SELECT Code_Barre,Numero_License,Titre,Support,codeCatalogue,
+ (select count(*) from emprunt where Contenu_Code_Barre=Code_Barre and Contenu_Numero_License=Numero_License and date_retour is null) as emprunté
 FROM Contenu
 WHERE type="physique"; 
 # l'usager veut savoir tous les contenu existant en pysique
@@ -49,7 +51,8 @@ CREATE PROCEDURE afficherCorrespondanceArtiste(IN artisteValNom VARCHAR(45))
 # l'usager veut savoir tous les contenu existant correspondant à un artiste en particulier
 AFFICHERCORRESPONDANCEARTISTE_LABEL:BEGIN
 
-SELECT Code_Barre,Numero_License,Titre,Support,Artiste.nom,Artiste.type
+SELECT Code_Barre,Numero_License,Titre,Support,Artiste.nom,Artiste.type,codeCatalogue,
+ (select count(*) from emprunt where Contenu_Code_Barre=Code_Barre and Contenu_Numero_License=Numero_License and date_retour is null) as emprunté
 FROM Contenu JOIN Participe 
 ON Contenu.Code_Barre =Participe.Contenu_Code_Barre AND Contenu.Numero_License = Participe.Contenu_Numero_License
 JOIN Artiste 
@@ -65,7 +68,8 @@ CREATE PROCEDURE afficherCorrespondanceGenre(IN genreValGenre VARCHAR(45))
 # l'usager veut savoir tous les contenu existant correspondant à un genre en particulier
 AFFICHERCORRESPONDANCEGENRE_LABEL:BEGIN
 
-SELECT Code_Barre,Numero_License,Titre,Support,Genre.nom
+SELECT Code_Barre,Numero_License,Titre,Support,Genre.nom,codeCatalogue,
+ (select count(*) from emprunt where Contenu_Code_Barre=Code_Barre and Contenu_Numero_License=Numero_License and date_retour is null) as emprunté
 FROM Contenu JOIN Décrit 
 ON Contenu.Code_Barre =Décrit.Contenu_Code_Barre AND Contenu.Numero_License = Décrit.Contenu_Numero_License
 JOIN Genre 
@@ -82,7 +86,8 @@ CREATE PROCEDURE afficherCorrespondanceEditeur(IN editeurValNom VARCHAR(45))
 # l'usager veut savoir tous les contenu existant correspondant à un editeur en particulier
 AFFICHERCORRESPONDANCEEDITEUR_LABEL:BEGIN
 
-SELECT Code_Barre,Numero_License,Titre,Support,Editeur.nom
+SELECT Code_Barre,Numero_License,Titre,Support,Editeur.nom,codeCatalogue,
+ (select count(*) from emprunt where Contenu_Code_Barre=Code_Barre and Contenu_Numero_License=Numero_License and date_retour is null) as emprunté
 FROM Contenu JOIN edite 
 ON Contenu.Code_Barre =edite.Contenu_Code_Barre AND Contenu.Numero_License = edite.Contenu_Numero_License
 JOIN Editeur 
@@ -99,7 +104,8 @@ CREATE PROCEDURE afficherCorrespondanceEtablissement(IN etablissementValNom VARC
 # l'usager veut savoir tous les contenu existant correspondant à un etablissement en particulier
 AFFICHERCORRESPONDANCEETABLISSEMENT_LABEL:BEGIN
 
-SELECT Code_Barre,Numero_License,Titre,Support,Etablissement.nom
+SELECT Code_Barre,Numero_License,Titre,Support,Etablissement.nom,codeCatalogue,
+ (select count(*) from emprunt where Contenu_Code_Barre=Code_Barre and Contenu_Numero_License=Numero_License and date_retour is null) as emprunté
 FROM Contenu JOIN possede 
 ON Contenu.Code_Barre =possede.Contenu_Code_Barre AND Contenu.Numero_License = possede.Contenu_Numero_License
 JOIN Etablissement 
@@ -116,7 +122,8 @@ CREATE PROCEDURE afficherCorrespondanceTitre(IN contenuValTitre VARCHAR(45))
 AFFICHERCORRESPONDANCETITRE_LABEL:BEGIN
 
 
-SELECT Code_Barre,Numero_License,Titre,Support
+SELECT Code_Barre,Numero_License,Titre,Support,codeCatalogue,
+ (select count(*) from emprunt where Contenu_Code_Barre=Code_Barre and Contenu_Numero_License=Numero_License and date_retour is null) as emprunté
 FROM Contenu 
 WHERE Contenu.Titre LIKE CONCAT("%",contenuValTitre,"%");
 
@@ -133,7 +140,8 @@ CREATE PROCEDURE afficherCorrespondanceMotCle(IN MotCle VARCHAR(45))
 # l'usager veut savoir tous les contenu existant correspondant à un Mot Cle en particulier
 AFFICHERCORRESPONDANCEMOTCLE:BEGIN
 
-SELECT Code_Barre,Numero_License,Titre,Support,Etablissement.nom AS Etablissement, Genre.nom AS Genre, Artiste.nom AS Artiste, Artiste.type AS Role 
+SELECT Code_Barre,Numero_License,Titre,Support,Etablissement.nom AS Etablissement, Genre.nom AS Genre, Artiste.nom AS Artiste, Artiste.type AS Role ,codeCatalogue,
+ (select count(*) from emprunt where Contenu_Code_Barre=Code_Barre and Contenu_Numero_License=Numero_License and date_retour is null) as emprunté
 FROM Contenu JOIN possede 
 ON Contenu.Code_Barre =possede.Contenu_Code_Barre AND Contenu.Numero_License = possede.Contenu_Numero_License
 JOIN Etablissement 
@@ -208,7 +216,7 @@ $$
 
 
 
-CALL afficherTout();
+#CALL afficherTout();
 #CALL afficherNumerique();
 #CALL afficherPhysique();
 #CALL afficherCorrespondanceArtiste("Stendhal");
