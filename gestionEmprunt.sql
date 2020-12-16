@@ -163,6 +163,22 @@ RENOUVELEREMPRUNT_LABEL:BEGIN
 END;
 $$
 
+
+
+
+DROP PROCEDURE IF EXISTS renouvelerAbonnement$$ 
+CREATE PROCEDURE renouvelerAbonnement(IN abonneValAdresse VARCHAR(45))
+# permet de renouveler un emprunt si personne ne l a reserve
+RENOUVELERABONNEMENT_LABEL:BEGIN
+	IF NOT EXISTS (SELECT * FROM abonne WHERE adresse = abonneValAdresse) THEN
+		LEAVE RENOUVELERABONNEMENT_LABEL;
+	END IF;
+	UPDATE abonne SET dateAdhesion = CURDATE() WHERE adresse = abonneValAdresse;
+END;
+$$
+
+
+
 DELIMITER ;
 
 CALL emprunterContenu(10,0,12);
@@ -182,13 +198,23 @@ CALL emprunterContenu(0,60,12); # refuse l emprunt d un contenu car il y a deja 
 #UPDATE `bibliotheque`.`abonne` SET `penalite` = '0' WHERE (`numero` = '11');
 #CALL emprunterContenu(0,70,11); # ne devrait pas fonctionner car penalite trop haute
 
+/*
 # Je rend en retard
-#CALL emprunterContenu(0,70,11);
-#UPDATE `bibliotheque`.`emprunt` SET `date_pret` = '2020-01-01' WHERE (`Contenu_Code_Barre` = '0000000000') and (`Contenu_Numero_License` = '0000000070') and (`Abonne_numero` = '11') and (`date_pret` = '2020-12-16');
-#CALL rendreContenu(0,70);
+CALL emprunterContenu(0,70,11);
+UPDATE `bibliotheque`.`emprunt` SET `date_pret` = '2020-01-01' WHERE (`Contenu_Code_Barre` = '0000000000') and (`Contenu_Numero_License` = '0000000070') and (`Abonne_numero` = '11') and (`date_pret` = '2020-12-16');
+CALL rendreContenu(0,70);
+*/
 
+/*
 # Julien emprunte, Eliott reserve, Julien essaie d etendre sa reservation
 CALL emprunterContenu(0,70,11);
 CALL reserverContenuEmprunte(0 , 70,13);
 CALL renouvelerEmprunt(0,70);
 # Test OK, le renouvellement n est pas effectue
+*/
+
+/*
+# renouvelement abonnement d une personne pas abonne et d un abonne
+CALL renouvelerAbonnement("athomas@enssat.fr");
+CALL renouvelerAbonnement("jthomas@enssat.fr");
+*/
