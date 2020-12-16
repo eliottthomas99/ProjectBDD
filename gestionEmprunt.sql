@@ -128,6 +128,29 @@ $$
 
 
 
+DROP PROCEDURE IF EXISTS renouvelerEmprunt$$ 
+CREATE PROCEDURE renouvelerEmprunt(IN contenuValCodeBarre INT, contenuValNumeroLicense INT)
+# permet de renouveler un emprunt si personne ne l a reserve
+RENOUVELEREMPRUNT_LABEL:BEGIN
+	# On commence par s assurer que le contenu est emprunte
+    IF (SELECT COUNT(*) FROM emprunt WHERE Contenu_Code_Barre=contenuValCodeBarre AND Contenu_Numero_License=contenuValNumeroLicense AND date_retour IS NULL) = 0 THEN 
+		LEAVE RENOUVELEREMPRUNT_LABEL;	
+	END IF;
+    # Si le contenu n est pas reserve et qu on est dans le dernier crenau, alors on peu etendre la reservation
+	SET @dateDebut = (SELECT date_pret FROM emprunt WHERE Contenu_Code_Barre = contenuValCodeBarre AND Contenu_Numero_License = contenuValNumeroLicense and date_retour IS NULL);
+	IF (SELECT support FROM contenu WHERE Code_Barre = contenuValCodeBarre AND Numero_License = contenuValNumeroLicense) = "livre" OR
+		(SELECT support FROM contenu WHERE Code_Barre = contenuValCodeBarre AND Numero_License = contenuValNumeroLicense) = "ebook" THEN
+        SET @reservationBas = ADDDATE(@dateDebut, INTERVAL 15 * (SELECT renouvellement FROM emprunt WHERE Contenu_Code_Barre = contenuValCodeBarre AND Contenu_Numero_License = contenuValNumeroLicense and date_retour IS NULL) DAY);
+        SET @reservationHaut = ADDDATE(@dateDebut, INTERVAL 15 * ((SELECT renouvellement FROM emprunt WHERE Contenu_Code_Barre = contenuValCodeBarre AND Contenu_Numero_License = contenuValNumeroLicense and date_retour IS NULL) + 1) DAY);
+        IF CURDATE() >= @reservationBas AND CURDATE() <= @reservationHaut THEN
+			UPDATE emprunt SET renouvellement = renouvellement + 1 WHERE Contenu_Code_Barre = contenuValCodeBarre AND Contenu_Numero_License = contenuValNumeroLicense and date_retour IS NULL;
+        END IF;
+	#ELSE
+	#	SET @delai = 7 * ((SELECT renouvellement FROM emprunt WHERE Contenu_Code_Barre = contenuValCodeBarre AND Contenu_Numero_License = contenuValNumeroLicense and date_retour IS NULL) + 1);
+	END IF;
+
+END;
+$$
 
 DELIMITER ;
 
@@ -136,7 +159,9 @@ CALL emprunterContenu(20,0,12);
 CALL emprunterContenu(30,0,12);
 CALL emprunterContenu(40,0,12);
 CALL emprunterContenu(50,0,12);
-CALL emprunterContenu(60,0,12); # refuse l emprunt d un contenu car il y a deja 5 emprunts en cours
+CALL emprunterContenu(0,60,12); # refuse l emprunt d un contenu car il y a deja 5 emprunts en cours
+
+CALL renouvelerEmprunt(10,0);
 
 #CALL rendreContenu(0,60);
 
