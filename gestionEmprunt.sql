@@ -6,43 +6,55 @@ SET @maxRenouvellement = 3;
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS reserverContenuEmprunte$$
-CREATE PROCEDURE reserverContenuEmprunte(IN contenuValCodeBarre INT, contenuValNumeroLicense INT,abonneValNumero INT)
+CREATE PROCEDURE reserverContenuEmprunte(IN contenuValCodeCatalogue INT,abonneValNumero INT)
 # Un client a constaté qu'un contenu est emprunté et souhaite le reserver
 RESERVERCONTENUEMPRUNTE_LABEL:BEGIN
 	
-	SET @verifEmprunt = (select count(*) from emprunt where Contenu_Code_Barre=contenuValCodeBarre and Contenu_Numero_License=contenuValNumeroLicense and date_retour IS NULL);
-    #verif emprunt vaut 1 si le contenu est emprunté, 0 sinon.
-    IF @verifEmprunt=0 THEN 
-		LEAVE RESERVERCONTENUEMPRUNTE_LABEL;
+    SET @nbDemande=    (select count(*) from demande where Abonne_numero=abonneValNumero and
+         Contenu_Code_Barre IN (select Code_Barre from contenu where codeCatalogue=contenuValCodeCatalogue ) and 
+         Contenu_Numero_License IN (select Numero_License from contenu where codeCatalogue=contenuValCodeCatalogue ));
+    
+    IF @nbDemande!=0 THEN 
+		LEAVE RESERVERCONTENUEMPRUNTE_LABEL; # il y a deja une demande concernant ce contenu
+    END IF;
+    
+    
+	SET @verifEmprunt = (select count(*) from emprunt join contenu on Contenu_Code_Barre=Code_Barre and Contenu_Numero_License=Numero_License
+    where CodeCatalogue=contenuValCodeCatalogue and date_retour IS NULL);
+    #verif emprunt vaut le nombre de contenu emprunté. on vérifie si cela correpond au total dexemplaires de ce contenu.
+    IF @verifEmprunt=(select count(*) from contenu
+    where contenu.codeCatalogue!=contenuValCodeCatalogue) THEN #il restait un contenu dispo avec ce code catalogue
+		SELECT "ça sort";
+        LEAVE RESERVERCONTENUEMPRUNTE_LABEL;
     END IF;
     
     #le contenu est bien déjà emprunté, on peut le reserver.
     # On vérifie qu'il n'ai pas de pénalité.
     SET @penalite = (SELECT penalite from abonne where numero=abonneValNumero);
     IF @penalite!=0 THEN 
+    SELECT "ça sort";
 		LEAVE RESERVERCONTENUEMPRUNTE_LABEL;
 	END IF;
     
-    # L'abonne n'a pas de pénalité, il peut emprunter s'il n'a pas plus de 3 demandes en cours.
-    SET @demandes = (SELECT count(*) from demande where Abonne_numero=abonneValNumero);
+    # L'abonne n'a pas de pénalité, il peut emprunter s'il n'a pas plus de 3 demandes en cours. 1 demande = 1 groupe de demande avec le même codeCatalogue
+    SET @demandes =   (SELECT count(DISTINCT contenu.codeCatalogue) from demande join contenu on Contenu_Code_Barre=Code_Barre and Contenu_Numero_License=Numero_License
+																	where Abonne_numero=abonneValNumero and
+																		  Contenu_Code_Barre IN (select Code_Barre from contenu ) and 
+																		  Contenu_Numero_License IN (select Numero_License from contenu ));
     
-    IF @demande>3 THEN 
+    IF @demandes>=3 THEN 
 		LEAVE RESERVERCONTENUEMPRUNTE_LABEL;
+        
 	END IF;
     #On peut finalement réserver
     
     INSERT INTO demande (Contenu_Code_Barre,Contenu_Numero_License,Abonne_Numero,date_demande)
-      SELECT contenuValCodeBarre,contenuValNumeroLicense,abonneValNumero,curdate()
-      FROM DUAL
-      WHERE NOT EXISTS (
-                  SELECT *
-                  FROM demande
-                  WHERE Contenu_Code_Barre = contenuValCodeBarre and
-						Contenu_Numero_License=contenuValNumeroLicense and
-                        Abonne_Numero=abonneValNumero and
-                        date_demande=curdate()
-                  LIMIT 1
-            );
+
+   SELECT contenu.Code_Barre,contenu.Numero_License, abonneValNumero,curdate()
+   
+   FROM contenu
+   
+   WHERE contenu.codeCatalogue=contenuValCodeCatalogue;
     
     
     
@@ -297,4 +309,8 @@ CALL renouvelerAbonnement(11);
 #CALL clientEmpruntantCount();
 #CALL contenuPopulaire(3);
 #CALL supportPopulaire(3);
-CALL rendreContenu(0,70);
+#CALL emprunterContenu(0,60,14);
+#CALL emprunterContenu(0,70,14);
+#CALL rendreContenu(0,70);
+CALL reserverContenuEmprunte(20,14);
+

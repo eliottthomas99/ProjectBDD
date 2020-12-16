@@ -216,7 +216,7 @@ $$
 
 
 
-#CALL afficherTout();
+CALL afficherTout();
 #CALL afficherNumerique();
 #CALL afficherPhysique();
 #CALL afficherCorrespondanceArtiste("Stendhal");
