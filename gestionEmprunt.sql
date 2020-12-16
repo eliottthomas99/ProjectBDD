@@ -101,7 +101,7 @@ INSERT INTO emprunt(Contenu_Code_Barre, Contenu_Numero_License,Abonne_numero,dat
             );
 # On retire toutes les demandes concernant ce code catalogue
 SET @codeCatalogue = (SELECT codeCatalogue FROM contenu WHERE Code_Barre=contenuValCodeBarre AND Numero_License=contenuValNumeroLicense);
-DELETE FROM demande WHERE ((Contenu_Code_Barre, Contenu_Numero_License) IN (SELECT Code_Barre,Numero_License FROM contenu WHERE codeCatalogue = @codeCatalogue));
+DELETE FROM demande WHERE ((Contenu_Code_Barre, Contenu_Numero_License) IN (SELECT Code_Barre,Numero_License FROM contenu WHERE codeCatalogue = @codeCatalogue)) AND Abonne_numero = abonneValNumero;
 
 END;
 $$
@@ -315,10 +315,11 @@ CALL emprunterContenu(0,60,12);
 CALL emprunterContenu(0,70,12);
 CALL reserverContenuEmprunte(0,60,11);
 CALL reserverContenuEmprunte(0,70,11);
+CALL reserverContenuEmprunte(0,60,13);
+CALL reserverContenuEmprunte(0,70,13);
 CALL rendreContenu(0,60);
-CALL emprunterContenu(0,60,13);
 */
-#CALL emprunterContenu(0,60,11);
+CALL emprunterContenu(0,60,13);
 
 
 
