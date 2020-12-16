@@ -77,24 +77,6 @@ END;
 $$
 
 
-DROP PROCEDURE IF EXISTS afficherDispo$$ 
-CREATE PROCEDURE afficherDispo()
-# l'usager veut connaitre les contenu disponibles
-AFFICHERDISPO_LABEL:BEGIN
-
-
-SELECT * FROM contenu 
-
-WHERE (Code_Barre,Numero_License) NOT IN 
-
-
-(SELECT Contenu_Code_Barre,Contenu_Numero_License 
-FROM Emprunt 
-WHERE date_retour IS NULL);
-
-
-END;
-$$
 
 DROP PROCEDURE IF EXISTS renouvelerEmprunt$$ 
 CREATE PROCEDURE renouvelerEmprunt(IN contenuValCodeBarre INT, contenuValNumeroLicense INT)
@@ -132,7 +114,7 @@ CALL emprunterContenu(0,60,12); # refuse l emprunt d un contenu car il y a deja 
 CALL renouvelerEmprunt(10,0);
 
 #CALL rendreContenu(0,60);
-#CALL afficherDispo();
+
 
 #CALL nombreEmprunt(12);
 
