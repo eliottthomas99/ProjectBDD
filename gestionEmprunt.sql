@@ -187,6 +187,19 @@ END;
 $$
 
 
+DROP PROCEDURE IF EXISTS payerPenalite$$ 
+CREATE PROCEDURE payerPenalite(IN somme INT, abonneValNumero INT)
+# permet de payer ses penalites
+PAYERPENALITE_LABEL:BEGIN
+	UPDATE abonne SET penalite = penalite - somme WHERE numero = abonneValNumero;
+END;
+$$
+
+
+
+
+
+
 DROP PROCEDURE IF EXISTS echeancier$$ 
 CREATE PROCEDURE echeancier()
 # Affiche la liste de tous les documents qui devraient etre rendu ainsi que les abonnes les possedant
@@ -319,9 +332,9 @@ CALL reserverContenuEmprunte(0,60,13);
 CALL reserverContenuEmprunte(0,70,13);
 CALL rendreContenu(0,60);
 */
-CALL emprunterContenu(0,60,13);
+#CALL emprunterContenu(0,60,13);
 
-
+#CALL payerPenalite(1337, 11);
 
 
 
