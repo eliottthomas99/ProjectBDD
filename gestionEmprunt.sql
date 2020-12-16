@@ -187,11 +187,55 @@ ECHEANCIER:BEGIN
 		ON Contenu.Code_Barre = emprunt.Contenu_Code_Barre AND Contenu.Numero_License = emprunt.Contenu_Numero_License
 	JOIN abonne 
 		ON abonne.numero = emprunt.Abonne_Numero
-    WHERE (((Support = "livre" OR Support = "ebook") AND DATEDIFF(CURDATE(), ADDDATE(date_pret, INTERVAL 15 * (renouvellement + 1) DAY)) > 0) OR
-		((Support != "livre" AND Support != "ebook") AND DATEDIFF(CURDATE(), ADDDATE(date_pret, INTERVAL 7 * (renouvellement + 1) DAY)) > 0)) 
+    WHERE (((Support = "livre" OR Support = "ebook") AND DATEDIFF(CURDATE(), ADDDATE(date_pret, INTERVAL 15 * (renouvellement + 1) DAY)) > 0)
+		OR ((Support != "livre" AND Support != "ebook") AND DATEDIFF(CURDATE(), ADDDATE(date_pret, INTERVAL 7 * (renouvellement + 1) DAY)) > 0))
         AND date_retour IS NULL;
 END;
 $$
+
+
+DROP PROCEDURE IF EXISTS empruntCount$$ 
+CREATE PROCEDURE empruntCount()
+# Affiche le nombre de contenus en cours d emprunt par bibliotheque
+ECHEANCIER:BEGIN
+	SELECT COUNT(*) as emprunts, etablissement.nom FROM Contenu
+    JOIN possede 
+		ON Contenu.Code_Barre = possede.Contenu_Code_Barre AND Contenu.Numero_License = possede.Contenu_Numero_License
+	JOIN etablissement 
+		ON etablissement.id = Etablissement_id
+    JOIN emprunt 
+		ON Contenu.Code_Barre = emprunt.Contenu_Code_Barre AND Contenu.Numero_License = emprunt.Contenu_Numero_License
+    WHERE emprunt.date_retour IS NULL
+	GROUP BY Etablissement_id;
+END;
+$$
+
+DROP PROCEDURE IF EXISTS clientEmpruntantCount$$ 
+CREATE PROCEDURE clientEmpruntantCount()
+# Affiche le nombre de clients ayant au moins un emprunt en cours
+ECHEANCIER:BEGIN
+	SELECT COUNT(*) as "emprunts en cours" FROM Contenu
+    JOIN emprunt 
+		ON Contenu.Code_Barre = emprunt.Contenu_Code_Barre AND Contenu.Numero_License = emprunt.Contenu_Numero_License
+    WHERE emprunt.date_retour IS NULL;
+END;
+$$
+
+DROP PROCEDURE IF EXISTS contenuPopulaire$$ 
+CREATE PROCEDURE contenuPopulaire(IN limite INT)
+# Affiche le nombre de clients ayant au moins un emprunt en cours
+ECHEANCIER:BEGIN
+    SELECT COUNT(*) AS emprunts, titre, support FROM contenu
+    JOIN emprunt 
+		ON Contenu.Code_Barre = emprunt.Contenu_Code_Barre AND Contenu.Numero_License = emprunt.Contenu_Numero_License
+    GROUP BY codeCatalogue # catalogue ou code barre et numero license ?
+    ORDER BY COUNT(*) DESC LIMIT limite;
+END;
+$$
+
+
+
+
 
 DELIMITER ;
 
@@ -233,4 +277,9 @@ CALL renouvelerAbonnement("athomas@enssat.fr");
 CALL renouvelerAbonnement("jthomas@enssat.fr");
 */
 
-CALL echeancier();
+#CALL echeancier();
+
+/* stats */
+#CALL empruntCount();
+#CALL clientEmpruntantCount();
+CALL contenuPopulaire(3);

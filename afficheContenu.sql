@@ -214,4 +214,4 @@ $$
 #CALL afficherCorrespondanceEtablissement("ENSSAT");
 #CALL afficherCorrespondanceMotCle("star wars");
 #CALL afficherCorrespondanceTitre("st");
-CALL afficherEmprunt();
+#CALL afficherEmprunt();
