@@ -1,5 +1,7 @@
 USE bibliotheque;
 
+SET @plafondPenalite = 1;
+
 DELIMITER $$
 
 DROP PROCEDURE IF EXISTS nombreEmprunt$$
@@ -16,11 +18,11 @@ CREATE PROCEDURE emprunterContenu(IN contenuValCodeBarre INT, contenuValNumeroLi
 # l'usager emprunte un contenu
 EMPRUNTERCONTENU_LABEL:BEGIN
 # On regarde si l abonne a deja 5 ou plus emprunts en cours
-IF (SELECT COUNT(*) FROM emprunt WHERE Abonne_numero = abonneValNumero) >= 5 THEN # TODO passer par une var globale pour calibrer la penalite
+IF (SELECT COUNT(*) FROM emprunt WHERE Abonne_numero = abonneValNumero) >= 5 THEN 
 	LEAVE EMPRUNTERCONTENU_LABEL;	
 END IF;
 # Sinon on regarde le niveau de penalite de l abonne
-IF (SELECT penalite FROM abonne WHERE numero = abonneValNumero) >= 1 THEN
+IF (SELECT penalite FROM abonne WHERE numero = abonneValNumero) >= @plafondPenalite THEN # TODO passer par une var globale pour calibrer la penalite
 	LEAVE EMPRUNTERCONTENU_LABEL;	
 END IF;
 # Sinon on permet l emprunt
@@ -109,10 +111,10 @@ CALL emprunterContenu(60,0,12); # refuse l emprunt d un contenu car il y a deja 
 
 #CALL nombreEmprunt(12);
 
-#UPDATE `bibliotheque`.`abonne` SET `penalite` = '1337' WHERE (`numero` = '11');
+#UPDATE `bibliotheque`.`abonne` SET `penalite` = '0' WHERE (`numero` = '11');
 #CALL emprunterContenu(0,70,11); # ne devrait pas fonctionner car penalite trop haute
 
 # je rend en retard
-#CALL emprunterContenu(0,70,11);
-#UPDATE `bibliotheque`.`emprunt` SET `date_pret` = '2020-01-01' WHERE (`Contenu_Code_Barre` = '0000000000') and (`Contenu_Numero_License` = '0000000070') and (`Abonne_numero` = '11') and (`date_pret` = '2020-12-15');
+CALL emprunterContenu(0,70,11);
+#UPDATE `bibliotheque`.`emprunt` SET `date_pret` = '2020-01-01' WHERE (`Contenu_Code_Barre` = '0000000000') and (`Contenu_Numero_License` = '0000000070') and (`Abonne_numero` = '11') and (`date_pret` = '2020-12-16');
 #CALL rendreContenu(0,70);
