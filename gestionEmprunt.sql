@@ -4,6 +4,56 @@ SET @plafondPenalite = 1;
 
 DELIMITER $$
 
+DROP PROCEDURE IF EXISTS reserverContenuEmprunte$$
+CREATE PROCEDURE reserverContenuEmprunte(IN contenuValCodeBarre INT, contenuValNumeroLicense INT,abonneValNumero INT)
+# Un client a constaté qu'un contenu est emprunté et souhaite le reserver
+RESERVERCONTENUEMPRUNTE_LABEL:BEGIN
+	
+	SET @verifEmprunt = (select count(*) from emprunt where Contenu_Code_Barre=contenuValCodeBarre and Contenu_Numero_License=contenuValNumeroLicense and date_retour IS NULL);
+    #verif emprunt vaut 1 si le contenu est emprunté, 0 sinon.
+    IF @verifEmprunt=0 THEN 
+		LEAVE RESERVERCONTENUEMPRUNTE_LABEL;
+    END IF;
+    
+    #le contenu est bien déjà emprunté, on peut le reserver.
+    # On vérifie qu'il n'ai pas de pénalité.
+    SET @penalite = (SELECT penalite from abonne where numero=abonneValNumero);
+    IF @penalite!=0 THEN 
+		LEAVE RESERVERCONTENUEMPRUNTE_LABEL;
+	END IF;
+    
+    # L'abonne n'a pas de pénalité, il peut emprunter s'il n'a pas plus de 3 demandes en cours.
+    SET @demandes = (SELECT count(*) from demande where Abonne_numero=abonneValNumero);
+    
+    IF @demande>3 THEN 
+		LEAVE RESERVERCONTENUEMPRUNTE_LABEL;
+	END IF;
+    #On peut finalement réserver
+    
+    INSERT INTO demande (Contenu_Code_Barre,Contenu_Numero_License,Abonne_Numero,date_demande)
+      SELECT contenuValCodeBarre,contenuValNumeroLicense,abonneValNumero,curdate()
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM demande
+                  WHERE Contenu_Code_Barre = contenuValCodeBarre and
+						Contenu_Numero_License=contenuValNumeroLicense and
+                        Abonne_Numero=abonneValNumero and
+                        date_demande=curdate()
+                  LIMIT 1
+            );
+    
+    
+    
+END;
+
+
+
+
+
+
+
+
 DROP PROCEDURE IF EXISTS nombreEmprunt$$
 CREATE PROCEDURE nombreEmprunt(IN abonneValNumero INT)
 # retourne le nombre de contenu qu un abonne n a pas encore rendu
@@ -100,3 +150,4 @@ CALL emprunterContenu(60,0,12); # refuse l emprunt d un contenu car il y a deja 
 #CALL emprunterContenu(0,70,11);
 #UPDATE `bibliotheque`.`emprunt` SET `date_pret` = '2020-01-01' WHERE (`Contenu_Code_Barre` = '0000000000') and (`Contenu_Numero_License` = '0000000070') and (`Abonne_numero` = '11') and (`date_pret` = '2020-12-16');
 #CALL rendreContenu(0,70);
+CALL reserverContenuEmprunte(0 , 70,15);
