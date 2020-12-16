@@ -210,12 +210,11 @@ empruntCount_LABEL:BEGIN
 END;
 $$
 
-# FIXME
 DROP PROCEDURE IF EXISTS clientEmpruntantCount$$ 
 CREATE PROCEDURE clientEmpruntantCount()
 # Affiche le nombre de clients ayant au moins un emprunt en cours
 clientEmpruntantCount_LABEL:BEGIN
-	SELECT COUNT(*) as "emprunts en cours" FROM Contenu
+	SELECT COUNT(DISTINCT emprunt.Abonne_numero) as "emprunts en cours" FROM Contenu
     JOIN emprunt 
 		ON Contenu.Code_Barre = emprunt.Contenu_Code_Barre AND Contenu.Numero_License = emprunt.Contenu_Numero_License
     WHERE emprunt.date_retour IS NULL;
@@ -297,4 +296,4 @@ CALL renouvelerAbonnement("jthomas@enssat.fr");
 #CALL empruntCount();
 #CALL clientEmpruntantCount();
 #CALL contenuPopulaire(3);
-CALL supportPopulaire(3);
+#CALL supportPopulaire(3);
