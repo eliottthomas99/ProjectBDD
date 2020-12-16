@@ -234,6 +234,19 @@ END;
 $$
 
 
+DROP PROCEDURE IF EXISTS supportPopulaire$$ 
+CREATE PROCEDURE supportPopulaire(IN limite INT)
+# Affiche le nombre de clients ayant au moins un emprunt en cours
+ECHEANCIER:BEGIN
+    SELECT COUNT(*) AS emprunts, support FROM contenu
+    JOIN emprunt 
+		ON Contenu.Code_Barre = emprunt.Contenu_Code_Barre AND Contenu.Numero_License = emprunt.Contenu_Numero_License
+    GROUP BY support # catalogue ou code barre et numero license ?
+    ORDER BY COUNT(*) DESC LIMIT limite;
+END;
+$$
+
+
 
 
 
@@ -282,4 +295,5 @@ CALL renouvelerAbonnement("jthomas@enssat.fr");
 /* stats */
 #CALL empruntCount();
 #CALL clientEmpruntantCount();
-CALL contenuPopulaire(3);
+#CALL contenuPopulaire(3);
+CALL supportPopulaire(3);
