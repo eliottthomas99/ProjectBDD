@@ -7,7 +7,10 @@ CREATE PROCEDURE afficherTout()
 
 AFFICHERTOUT_LABEL:BEGIN
 
-SELECT Code_Barre,Numero_License,Titre,Support FROM Contenu; # l'usager veut savoir tous les contenu existant
+SELECT Code_Barre,Numero_License,Titre,Support,codeCatalogue,
+ (select count(*) from emprunt where Contenu_Code_Barre=Code_Barre and Contenu_Numero_License=Numero_License and date_retour is null) as emprunté
+ 
+ FROM Contenu ; # l'usager veut savoir tous les contenu existant
 
 END;
 $$
@@ -205,7 +208,7 @@ $$
 
 
 
-#CALL afficherTout();
+CALL afficherTout();
 #CALL afficherNumerique();
 #CALL afficherPhysique();
 #CALL afficherCorrespondanceArtiste("Stendhal");

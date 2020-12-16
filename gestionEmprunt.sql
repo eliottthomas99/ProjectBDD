@@ -297,4 +297,5 @@ CALL renouvelerAbonnement("jthomas@enssat.fr");
 #CALL empruntCount();
 #CALL clientEmpruntantCount();
 #CALL contenuPopulaire(3);
-CALL supportPopulaire(3);
+#CALL supportPopulaire(3);
+CALL rendreContenu(0,70);
