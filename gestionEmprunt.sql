@@ -178,6 +178,20 @@ END;
 $$
 
 
+DROP PROCEDURE IF EXISTS echeancier$$ 
+CREATE PROCEDURE echeancier()
+# Affiche la liste de tous les documents qui devraient etre rendu ainsi que les abonnes les possedant
+ECHEANCIER:BEGIN
+	SELECT nom, prenom, adresse AS email, Code_Barre,Numero_License, Titre, Support FROM Contenu
+    JOIN emprunt 
+		ON Contenu.Code_Barre = emprunt.Contenu_Code_Barre AND Contenu.Numero_License = emprunt.Contenu_Numero_License
+	JOIN abonne 
+		ON abonne.numero = emprunt.Abonne_Numero
+    WHERE (((Support = "livre" OR Support = "ebook") AND DATEDIFF(CURDATE(), ADDDATE(date_pret, INTERVAL 15 * (renouvellement + 1) DAY)) > 0) OR
+		((Support != "livre" AND Support != "ebook") AND DATEDIFF(CURDATE(), ADDDATE(date_pret, INTERVAL 7 * (renouvellement + 1) DAY)) > 0)) 
+        AND date_retour IS NULL;
+END;
+$$
 
 DELIMITER ;
 
@@ -218,3 +232,5 @@ CALL renouvelerEmprunt(0,70);
 CALL renouvelerAbonnement("athomas@enssat.fr");
 CALL renouvelerAbonnement("jthomas@enssat.fr");
 */
+
+CALL echeancier();
