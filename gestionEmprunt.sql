@@ -68,12 +68,19 @@ DROP PROCEDURE IF EXISTS emprunterContenu$$
 CREATE PROCEDURE emprunterContenu(IN contenuValCodeBarre INT, contenuValNumeroLicense INT,abonneValNumero INT)
 # l'usager emprunte un contenu
 EMPRUNTERCONTENU_LABEL:BEGIN
+# On regarde si le contenu est demande (sur liste d attente)
+IF EXISTS (SELECT * FROM demande WHERE Contenu_Code_Barre=contenuValCodeBarre AND Contenu_Numero_License=contenuValNumeroLicense) THEN
+	# Si la personne qui veut emprunter n a pas fait de demande on refuse l emprunt
+	IF NOT EXISTS (SELECT * FROM demande WHERE Contenu_Code_Barre=contenuValCodeBarre AND Contenu_Numero_License=contenuValNumeroLicense AND Abonne_numero = abonneValNumero) THEN 
+		LEAVE EMPRUNTERCONTENU_LABEL;
+	END IF;
+END IF;
 # On regarde si l abonne a deja 5 ou plus emprunts en cours
 IF (SELECT COUNT(*) FROM emprunt WHERE Abonne_numero = abonneValNumero) >= 5 THEN 
 	LEAVE EMPRUNTERCONTENU_LABEL;	
 END IF;
 # Sinon on regarde le niveau de penalite de l abonne
-IF (SELECT penalite FROM abonne WHERE numero = abonneValNumero) >= @plafondPenalite THEN # TODO passer par une var globale pour calibrer la penalite
+IF (SELECT penalite FROM abonne WHERE numero = abonneValNumero) >= @plafondPenalite THEN
 	LEAVE EMPRUNTERCONTENU_LABEL;	
 END IF;
 # Sinon on permet l emprunt
@@ -92,7 +99,9 @@ INSERT INTO emprunt(Contenu_Code_Barre, Contenu_Numero_License,Abonne_numero,dat
                         date_retour IS NULL
                   LIMIT 1
             );
-
+# On retire toutes les demandes concernant ce code catalogue
+SET @codeCatalogue = (SELECT codeCatalogue FROM contenu WHERE Code_Barre=contenuValCodeBarre AND Numero_License=contenuValNumeroLicense);
+DELETE FROM demande WHERE ((Contenu_Code_Barre, Contenu_Numero_License) IN (SELECT Code_Barre,Numero_License FROM contenu WHERE codeCatalogue = @codeCatalogue));
 
 END;
 $$
@@ -252,12 +261,14 @@ $$
 
 DELIMITER ;
 
+/*
 CALL emprunterContenu(10,0,12);
 CALL emprunterContenu(20,0,12);
 CALL emprunterContenu(30,0,12);
 CALL emprunterContenu(40,0,12);
 CALL emprunterContenu(50,0,12);
 CALL emprunterContenu(0,60,12); # refuse l emprunt d un contenu car il y a deja 5 emprunts en cours
+*/
 
 #CALL renouvelerEmprunt(10,0);
 
@@ -292,9 +303,32 @@ CALL renouvelerAbonnement(11);
 
 #CALL echeancier();
 
+/*
+# Le contenu que je veux emprunter n est pas dispo, je le reserve
+CALL emprunterContenu(10,0,12);
+CALL reserverContenuEmprunte(10,0,11);
+*/
+
+/*
+# je veux emprunter un contenu que quelqu un d autre a reserve
+CALL emprunterContenu(0,60,12);
+CALL emprunterContenu(0,70,12);
+CALL reserverContenuEmprunte(0,60,11);
+CALL reserverContenuEmprunte(0,70,11);
+CALL rendreContenu(0,60);
+CALL emprunterContenu(0,60,13);
+*/
+#CALL emprunterContenu(0,60,11);
+
+
+
+
+
+
+
 /* stats */
 #CALL empruntCount();
 #CALL clientEmpruntantCount();
 #CALL contenuPopulaire(3);
 #CALL supportPopulaire(3);
-CALL rendreContenu(0,70);
+#CALL rendreContenu(0,70);
