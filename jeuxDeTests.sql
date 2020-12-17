@@ -59,38 +59,31 @@ use bibliotheque;
 #CALL ajoutEdite("Seyes",0,152); #On dit que le contenu (0,152) est co edite avec Seyes -> Ne fonctionne pas car "seyes" na pas ete cree comme editeur
 
 # CAS 19 : TEST procedure ajoutLienEdite
-CALL ajoutLienEdite("Seyes", 0, 152); #On dit que le contenu (0,152) est co edite avec Seyes -> Fonctionne cette fois car cree Seyes en tant qu editeur avant de le lier au contenu
+#CALL ajoutLienEdite("Seyes", 0, 152); #On dit que le contenu (0,152) est co edite avec Seyes -> Fonctionne cette fois car cree Seyes en tant qu editeur avant de le lier au contenu
 
-# CAS 18 : TEST procedure ajoutParticipe
-#CALL ajoutParticipe("Julien THOMAS",0,152); #On dit que le contenu (0,152) est co ecrit avec Julien THOMAS
+# CAS 20 : TEST procedure ajoutParticipe
+#CALL ajoutParticipe("Julien THOMAS","ecrivain",0,152); #On dit que le contenu (0,152) est co ecrit avec Julien THOMAS -> ne fonctionne pas car Julien THOMAS n'est pas dans les artistes 
 
-# CAS 19 : TEST procedure ajoutPossede
-#CALL ajoutPossede("ENSSAT",0,152); #On dit que le contenu (0,152) appartient également à l'ENSSAT
+# CAS 21 : TEST procedure ajoutLienParticipe
+#CALL ajoutLienParticipe("Julien THOMAS","ecrivain", 0, 152); #On dit que le contenu (0,152) est co ecrit avec Julien THOMAS -> fonctionne car on ajoute Julien THOMAS dans les artistes avant de le lier au contenu
 
-# CAS 20 : TEST procedure ajoutGenre
+# CAS 22 : TEST procedure ajoutPossede
+#CALL ajoutPossede("Warp Zone",0,152); #On dit que le contenu (0,152) appartient également à Warp Zone -> ne fonctionne pas car WarpZone n'a pas été créé
+
+# CAS 23 : TEST procedure ajoutLienPossede
+#CALL ajoutLienPossede("Warp Zone", 0, 152); #On dit que le contenu (0,200) est également possédé -> fonctionne car on cree Warp Zone avant de le lier au contenu
+
+# CAS 24 : TEST procedure ajoutGenre
 #CALL ajoutGenre("comedie musicale"); #On crée un nouveau genre
 
-# CAS 21 : TEST procedure ajoutLivre
+# CAS 25 : TEST procedure ajoutLivre
 #CALL ajoutLivre(180,"Le Seigneur des anneaux",135,"J. R. R. Tolkien","fantastique","Folio junior","Nokia"); #On ajoute le seigneur des anneaux chez Nokia
 
-# CAS 22 : TEST procedure ajoutEtablissement
+# CAS 26 : TEST procedure ajoutEtablissement
 #CALL ajoutEtablissement("mediatheque de Lannion"); #On ajoute la "mediatheque de Lannion" aux etablissements
 
-# CAS 23 : TEST procedure ajoutEFilm
+# CAS 27 : TEST procedure ajoutEFilm
 #CALL ajoutEFilm(200,"Le Hobbit",200,"Peter Jackson","Peter Jackson","fantastique","IUT"); #On ajoute le Hobbit au format numérique pour l'IUT
-
-
-
-# CAS 25 : TEST procedure ajoutLienEdite
-#CALL ajoutLienEdite("Gallimard", 180, 0); #On ajoute au contenu (180,0) l'éditeur "Gallimard"
-
-# CAS 26 : TEST procedure ajoutLienParticipe
-#CALL ajoutLienParticipe("J. R. R. Tolkien","auteur", 0, 200); #On ajoute au contenu (0,200) l auteur J R R Tolkien
-
-# CAS 27 : TEST procedure ajoutLienPossede
-#CALL ajoutLienPossede("IUT", 0, 200); #On dit que le contenu (0,200) est également possédé
-
-
 
 # CAS 28 : TEST procedure ajoutEditeur
 #CALL ajoutEditeur("Larousse"); #On ajoute l editeur "Larousse"
