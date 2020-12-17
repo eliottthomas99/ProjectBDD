@@ -334,17 +334,23 @@ CALL emprunterContenu(10,0,12);
 CALL reserverContenuEmprunte(10,0,11);
 */
 
-/*
+
 # je veux emprunter un contenu que quelqu un d autre a reserve
+#SELECT * FROM bibliotheque.emprunt;
 CALL emprunterContenu(0,60,12);
 CALL emprunterContenu(0,70,12);
-CALL reserverContenuEmprunte(0,60,11);
-CALL reserverContenuEmprunte(0,70,11);
-CALL reserverContenuEmprunte(0,60,13);
-CALL reserverContenuEmprunte(0,70,13);
+#SELECT * FROM bibliotheque.emprunt;
+#SELECT * FROM bibliotheque.demande;
+CALL reserverContenuEmprunte(27,11);
+CALL reserverContenuEmprunte(27,13);
+#SELECT * FROM bibliotheque.demande;
+#SELECT * FROM bibliotheque.emprunt;
 CALL rendreContenu(0,60);
-*/
-#CALL emprunterContenu(0,60,13);
+#SELECT * FROM bibliotheque.emprunt;
+CALL emprunterContenu(0,60,12);
+
+
+
 
 #CALL payerPenalite(1337, 11);
 
