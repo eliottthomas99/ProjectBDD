@@ -120,37 +120,137 @@ CALL reserverContenuEmprunte(41,39); #l'abonne réserve le contenu. Sa demande p
 
 
 
+/*
+# CAS 37 : renouvelerAbonnement
+# Si l'abonne n existe pas
+CALL renouvelerAbonnement(30); # Il n'existe pas d'abonne avec le numero 30 alors il ne se passe rien
+*/
+
+
+/*
+# CAS 37* : renouvelerAbonnement
+# Si l'abonne existe et si sa date d abonnement est plus ancienne que la date du jour
+UPDATE `bibliotheque`.`abonne` SET `dateAdhesion` = '2020-12-01' WHERE (`numero` = '1'); # On change la date d abonnement d un abonne pour pouvoir la mettre a jour
+CALL renouvelerAbonnement(1); # La date d abonnement de l'abonne est mise a jour avec la date du jour
+*/
+
+
+/*
+# CAS 38 : rendreContenu
+CALL rendreContenu(0,6); # Si on essaie de rendre un contenu qui n est pas emprunte alors rien ne se passe
+*/
+
+
+/*
+# CAS 38* : rendreContenu
+CALL emprunterContenu(0,6,1); # On emprunte le contenu pour pouvoir le rendre
+CALL rendreContenu(0,6); # L emprunt est bien mis a jour et considere comme termine, le contenu est de nouveau disponible
+*/
+
+
+/*
+# CAS 38** : rendreContenu
+# Si on rend en retard on a une penalite
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '1', '2020-10-01', '0'); # On fait un emprunt qui nous fait depasser la date limite de rendu
+CALL rendreContenu(0,6); # L emprunt est bien mis a jour et considere comme termine, le contenu est de nouveau disponible ET l abonne a une penalite
+*/
+
+
+/*
+# CAS 39 : renouvelerEmprunt
+# On renouvel un emprunt que si il est deja emprunte
+CALL renouvelerEmprunt(0,6); # rien ne se passe, le contenu n est pas emprunte, il ne peut pas etre renouvele
+*/
+
+
+/*
+# CAS 39* : renouvelerEmprunt
+# On renouvel un emprunt que si il est deja emprunte
+CALL emprunterContenu(0,6,1); # On emprunte le contenu pour pouvoir renouveler l emprunt
+CALL renouvelerEmprunt(0,6); # l emprunt est renouvele
+*/
+
+
+/*
+# CAS 39** : renouvelerEmprunt
+# On renouvel un emprunt que si l abonne n est pas en retard par rapport a la date buttoire de rendu
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '1', '2020-11-01', '0'); # Le contenu de numero de license 6 a ete emprunte il a plus que 7 jours (7 jours car ce n est ni un livre ni un ebook, ca serait 15 jours dans ce cas la)
+CALL renouvelerEmprunt(0,6); # on ne renouvel pas car l abonne est en retard pour le rendu
+*/
+
+
+/*
+# CAS 39*** : renouvelerEmprunt
+# On renouvel un emprunt que si l abonne n est pas depasse la limite de 3 renouvellement
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '1', '2020-11-24', '3'); # Le contenu de numero de license 6 a ete emprunte il a au mini 21 jours et au plus 28 jours /!\ ATTENTION /!\ ajuster la date si besoin !
+CALL renouvelerEmprunt(0,6); # on ne renouvel pas car l abonne a atteint la limite de renouvellements
+*/
+
+
+/*
+# CAS 39**** : renouvelerEmprunt
+# On renouvel un emprunt que si l abonne n est pas depasse la limite de 3 renouvellement
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '1', '2020-12-01', '2'); # Le contenu de numero de license 6 a ete emprunte il a au mini 14 jours et au plus 21 jours /!\ ATTENTION /!\ ajuster la date si besoin !
+CALL renouvelerEmprunt(0,6); # On renouvele car ici on n est qu a 2 renouvelements et qu on est dans la bonne fourchette de temps pour le faire !! voir le rapport pour plus de precision !!
+*/
+
+
+/*
+# CAS 39***** : renouvelerEmprunt
+# On ne peut pas faire 2 renouvellement de suite, on doit attendre d etre dans le dernier crenau pour pouvoir renouveler l emprunt !! voir le rapport pour plus d infos !!
+CALL emprunterContenu(0,6,1); # On emprunte le contenu pour pouvoir renouveler l emprunt
+CALL renouvelerEmprunt(0,6); # l emprunt est renouvele
+CALL renouvelerEmprunt(0,6); # l emprunt n est pas renouvele car on n est pas dans la bonne fourchette de temps pour le faire !! voir le rapport pour plus de precision !!
+*/
+
+
+/*
 # CAS 40 : reserverContenuEmprunte
 # On essaie de reserver un contenu qui est dispo
 # On reserve tous les star wars episode 3
 # SELECT * FROM bibliotheque.demande; # pas encore de demande
-# CALL reserverContenuEmprunte(3, 1);
+ CALL reserverContenuEmprunte(3, 1);
 # SELECT * FROM bibliotheque.demande; # pas de demande enregistre
+*/
 
 
 /*
 # CAS 40* : reserverContenuEmprunte
 # On reserve tous les contenus qui ont le meme code catalogue si aucun des contenu avec ce code catalogue n est dispo
 # On reserve tous les star wars episode 3
-INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '5', '38', '2020-10-15', '0');
-INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '39', '2020-10-15', '0');
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '5', '1', '2020-10-15', '0'); # On reserve le contenu de numero de license 5 mais on ne le rend pas encore
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '2', '2020-10-15', '0'); # On reserve le contenu de numero de license 6 mais on ne le rend pas encore
 # On fait une demande sur star wars episode 3
 # SELECT * FROM bibliotheque.demande; # pas encore de demande
-CALL reserverContenuEmprunte(3, 40);
+CALL reserverContenuEmprunte(3, 8);
 # SELECT * FROM bibliotheque.demande; # demande ok
 */
 
 
 /*
 # CAS 40** : reserverContenuEmprunte
-# On reserve tous les contenus qui ont le meme code catalogue si aucun des contenu avec ce code catalogue n est dispo 
+# On reserve tous les contenus qui ont le meme code catalogue si aucun des contenu avec ce code catalogue n est dispo
 # On reserve tous les star wars episode 3
-INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '5', '38', '2020-10-15', '0');
-INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '39', '2020-10-15', '0');
-# on met une penalite a notre abonne l empechant de faire des demandes et des emprunts
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `date_retour`, `renouvellement`) VALUES ('0', '5', '1', '2020-10-01', '2020-12-15', '0'); # On reserve le contenu de numero de license 5 mais on ne le rend pas encore
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '2', '2020-10-15', '0'); # On reserve le contenu de numero de license 6 mais on ne le rend pas encore
 # On fait une demande sur star wars episode 3
 # SELECT * FROM bibliotheque.demande; # pas encore de demande
-CALL reserverContenuEmprunte(3, 40);
+CALL reserverContenuEmprunte(3, 8);
+# SELECT * FROM bibliotheque.demande; # demande ok
+*/
+
+
+/*
+# CAS 40*** : reserverContenuEmprunte
+# On reserve tous les contenus qui ont le meme code catalogue si aucun des contenu avec ce code catalogue n est dispo 
+# On reserve tous les star wars episode 3
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '5', '1', '2020-10-15', '0'); # On reserve le contenu de numero de license 5 mais on ne le rend pas encore
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '2', '2020-10-15', '0'); # On reserve le contenu de numero de license 6 mais on ne le rend pas encore
+# on met une penalite a notre abonne l empechant de faire des demandes et des emprunts
+UPDATE `bibliotheque`.`abonne` SET `penalite` = '1337' WHERE (`numero` = '8'); # On modifie la penalite de l abonne de maniere a ce qu il ne puisse pas faire d emprunts ni de reservation
+# On fait une demande sur star wars episode 3
+# SELECT * FROM bibliotheque.demande; # pas encore de demande
+CALL reserverContenuEmprunte(3, 8);
 # SELECT * FROM bibliotheque.demande; # pas de demande enregistre
 */
 
