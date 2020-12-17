@@ -140,8 +140,8 @@ CALL ajoutAbonne("FOUQUET","Fayette","ffouquet@nokia.fr");
 CALL ajoutAbonne("COULOMBE","Percy","pcouloumbe@enssat.fr");
 CALL ajoutAbonne("JARDINE","Octave","ojardine@ifsi.fr");
 CALL ajoutAbonne("LEROUX","Eloise","eleroux@nokia.fr");
-CALL ajoutAbonne("Raymond","Angelette","araymond@iut.fr");
-CALL ajoutAbonne("Marceau","Eliot","emarceau@orange.fr");
+CALL ajoutAbonne("RAYMOND","Angelette","araymond@iut.fr");
+CALL ajoutAbonne("MARCEAU","Eliot","emarceau@orange.fr");
 
 
 
