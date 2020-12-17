@@ -406,6 +406,56 @@ AJOUTEFILM_LABEL :BEGIN
       CALL ajoutDecrit(genreValGenre, 0, contenuValNumeroLicense);
       CALL ajoutPossede(etablissementValNom, 0, contenuValNumeroLicense);
 END;$$
+############################################################################
+#ajoutContenu(contenuValCodeBarre,contenuValNumeroLicense,contenuValTitre,contenuValType,contenuValSupport,contenuValCodeCatalogue,etablissementValNom,genreValGenre)
+############################################################################
+
+DROP PROCEDURE IF EXISTS ajoutContenu $$
+CREATE PROCEDURE ajoutContenu(
+      IN contenuValCodeBarre INT,
+      contenuValNumeroLicense INT,
+      contenuValTitre VARCHAR(45),
+      contenuValType VARCHAR(45),
+      contenuValSupport VARCHAR(45),
+      contenuValCodeCatalogue INT,
+      etablissementValNom VARCHAR(45),
+      genreValGenre VARCHAR(45))
+
+AJOUTCONTENU_LABEL :BEGIN
+      IF (
+            SELECT COUNT(*)
+            FROM contenu
+            WHERE Code_Barre = contenuValCodeBarre AND Numero_License = contenuValNumeroLicense
+      ) >= 1 THEN LEAVE AJOUTCONTENU_LABEL;
+      END IF;
+      INSERT INTO contenu (
+                  Code_Barre,
+                  Numero_License,
+                  Titre,
+                  Type,
+                  Support,
+                  CodeCatalogue
+            )
+      SELECT contenuValCodeBarre,
+            contenuValNumeroLicense,
+            contenuValTitre,
+            contenuValType,
+            contenuValSupport,
+            contenuValCodeCatalogue
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM contenu
+                  WHERE Code_Barre = contenuValCodeBarre AND Numero_License = contenuValNumeroLicense
+                  LIMIT 1
+            );
+      CALL ajoutGenre(genreValGenre);
+      CALL ajoutEtablissement(etablissementValNom);
+
+      #tables de relations
+      CALL ajoutDecrit(genreValGenre, 0, contenuValNumeroLicense);
+      CALL ajoutPossede(etablissementValNom, 0, contenuValNumeroLicense);
+END;$$
 
 ############################################################################
 #ajoutEBook(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValAuteur,genreValGenre,editeurValEditeur)
@@ -563,3 +613,5 @@ CALL ajoutEBook(80,"Narnia",28,"C S Lewis","fantastique","Gallimard jeunesse","I
 CALL ajoutAbonne("THOMAS", "Julien", "jthomas@enssat.fr");
 CALL ajoutAbonne("THOMAS","Jeremy","jthoma1@enssat.fr");
 CALL ajoutAbonne("THOMAS","Eliott","ethomas@enssat.fr");
+
+CALL ajoutContenu(90,0,"trivial pursuit","physique","jeu de plateau",29,"Orange","culture generale");
