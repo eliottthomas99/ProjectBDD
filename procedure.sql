@@ -354,7 +354,7 @@ AJOUTDVD_LABEL :BEGIN
 END;$$
 
 ############################################################################
-#ajoutDVD(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValRealisateur,artisteValProducteur,genreValGenre)
+#ajoutEFILM(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValRealisateur,artisteValProducteur,genreValGenre)
 ############################################################################
 
 DROP PROCEDURE IF EXISTS ajoutEFilm $$
@@ -386,7 +386,7 @@ AJOUTEFILM_LABEL :BEGIN
             contenuValNumeroLicense,
             contenuValTitre,
             'numerique',
-            'EFilm',
+            'efilm',
             contenuValCodeCatalogue
       FROM DUAL
       WHERE NOT EXISTS (
@@ -405,6 +405,60 @@ AJOUTEFILM_LABEL :BEGIN
       CALL ajoutParticipe(artisteValProducteur, "producteur", 0, contenuValNumeroLicense);
       CALL ajoutDecrit(genreValGenre, 0, contenuValNumeroLicense);
       CALL ajoutPossede(etablissementValNom, 0, contenuValNumeroLicense);
+END;$$
+
+############################################################################
+#ajoutEBook(contenuValCodeBarre,contenuValTitre,contenuValCodeCatalogue,artisteValAuteur,genreValGenre,editeurValEditeur)
+###########################################################################
+
+DROP PROCEDURE IF EXISTS ajoutEBook $$
+CREATE PROCEDURE ajoutEBook(
+      IN contenuValCodeBarre INT,
+      contenuValTitre VARCHAR(45),
+      contenuValCodeCatalogue INT,
+      artisteValAuteur VARCHAR(45),
+      genreValGenre VARCHAR(45),
+      editeurValEditeur VARCHAR(45),
+      etablissementValNom VARCHAR(45))
+
+ajoutEBook_LABEL :BEGIN
+      IF (
+            SELECT COUNT(*)
+            FROM contenu
+            WHERE Code_Barre = contenuValCodeBarre
+      ) >= 1 THEN LEAVE ajoutEBook_LABEL;
+      END IF;
+      INSERT INTO contenu (
+                  Code_Barre,
+                  Numero_License,
+                  Titre,
+                  Type,
+                  Support,
+                  CodeCatalogue
+            )
+      SELECT contenuValCodeBarre,
+            0,
+            contenuValTitre,
+            'numérique',
+            'ebook',
+            contenuValCodeCatalogue
+      FROM DUAL
+      WHERE NOT EXISTS (
+                  SELECT *
+                  FROM contenu
+                  WHERE Code_Barre = contenuValCodeBarre
+                  LIMIT 1
+            );
+      CALL ajoutArtiste(artisteValAuteur, "ecrivain");
+      CALL ajoutGenre(genreValGenre);
+      CALL ajoutEditeur(editeurValEditeur);
+      CALL ajoutEtablissement(etablissementValNom);
+
+      #tables de relations
+      CALL ajoutEdite(editeurValEditeur, contenuValCodeBarre, 0);
+      CALL ajoutParticipe(artisteValAuteur, "ecrivain", contenuValCodeBarre, 0);
+      CALL ajoutDecrit(genreValGenre, contenuValCodeBarre, 0);
+      CALL ajoutPossede(etablissementValNom, contenuValCodeBarre, 0);
 END;$$
 
 ###########################################################################################################
@@ -505,7 +559,7 @@ CALL ajoutEFilm(
       "ENSSAT"
 );
 CALL ajoutEFilm(70,"Star Wars Episode III",27,"George Lucas","Rick McCallum","science fiction","ENSSAT");
-
+CALL ajoutEBook(80,"Narnia",28,"C S Lewis","fantastique","Gallimard jeunesse","IUT");
 CALL ajoutAbonne("THOMAS", "Julien", "jthomas@enssat.fr");
 CALL ajoutAbonne("THOMAS","Jeremy","jthoma1@enssat.fr");
 CALL ajoutAbonne("THOMAS","Eliott","ethomas@enssat.fr");
