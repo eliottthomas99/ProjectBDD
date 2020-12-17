@@ -55,11 +55,11 @@ CALL ajoutLivre(50,"Metaphysique de l amour sexuel",24,"A. Schopenhauer","philos
 
 CALL ajoutContenu(106,0,"Nothing but the beat","physique","album",39,"IFSI","electro");
 CALL ajoutLienParticipe("David Guetta","DJ",106,0);
-CALL ajoutContenu(107,0,"Titanium","physique","musique",40,"IFSI","electro");
+CALL ajoutContenu(107,0,"Titanium","physique","CD",40,"IFSI","electro");
 CALL ajoutLienParticipe("David Guetta","DJ",107,0);
 CALL ajoutContenu(108,0,"Back in black","physique","album",41,"IFSI","rock");
 CALL ajoutLienParticipe("ACDC","groupe",108,0);
-CALL ajoutContenu(109,0,"Breath of the wild","numerique","jeu video",41,"ENSSAT","aventure");
+CALL ajoutContenu(109,0,"Breath of the wild","numerique","jeu video",42,"ENSSAT","aventure");
 CALL ajoutLienParticipe("Eiji Aonuma","direteur",109,0);
 /**********************************************************************************/
 
