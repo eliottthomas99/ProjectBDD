@@ -1,10 +1,49 @@
 use bibliotheque;
 
-# CAS 0 : TEST procedure afficherCorrespondanceArtiste
-CALL afficherCorrespondanceArtiste("George"); #Un ulilisateur regarde les contenus proposés
-
 # CAS 0 : TEST procedure afficherTout
-#CALL afficherTout(); #Un ulilisateur regarde les contenus proposés
+# CALL afficherTout(); #Un ulilisateur regarde les tous contenus proposés
+
+# CAS 1 : TEST procedure afficherPhysique
+# CALL afficherPhysique(); #Un ulilisateur regarde les contenus proposés en physique
+
+# CAS 2 : TEST procedure afficherNumerique
+# CALL afficherNumerique(); #Un ulilisateur regarde les contenus proposés en numerique
+
+# CAS 3 : TEST procedure afficherEmprunt
+# CALL afficherEmprunt(); #Un ulilisateur regarde les contenus empruntes
+
+# CAS 4 : TEST procedure afficherDispo
+# CALL afficherDispo(); #Un ulilisateur regarde les contenus disponibles
+
+# CAS 5 : TEST procedure afficherCorrespondanceTitre
+# CALL afficherCorrespondanceTitre("Star Wars"); #Un ulilisateur regarde les contenus dont le titre contient "star wars"
+
+# CAS 6 : TEST procedure afficherCorrespondanceGenre
+# CALL afficherCorrespondanceGenre("aventure"); #Un ulilisateur regarde les contenus dans le genre "aventure"
+
+# CAS 7 : TEST procedure afficherCorrespondanceEtablissement
+# CALL afficherCorrespondanceEtablissement("ENSSAT"); #Un ulilisateur regarde les contenus appartenant à l ENSSAT
+
+# CAS 8 : TEST procedure afficherCorrespondanceEditeur
+# CALL afficherCorrespondanceEditeur("Gallimard"); #Un ulilisateur regarde les livres édités chez Gallimard
+
+# CAS 9 : TEST procedure afficherCorrespondanceArtiste
+# CALL afficherCorrespondanceArtiste("George Lucas"); #Un ulilisateur regarde les contenus où George Lucas a participéalter
+
+# CAS 10 : TEST procedure afficherCorrespondanceMotCle
+# CALL afficherCorrespondanceMotCle("Star"); #Un ulilisateur regarde les contenus en "rapport" avec le mot cle "Star"
+
+# CAS 11 : TEST procedure ajoutAbonne
+#CALL ajoutAbonne("VADOR","Dark","dvador@orange.fr"); #On ajoute Dark VADOR en tant qu abonne
+
+# CAS 12 : TEST procedure ajoutArtiste
+#CALL ajoutArtiste('Eric THOMAS', 'guitariste'); #On ajoute Eric THOMAS en tant qu artiste
+
+
+
+
+
+
 
 
 

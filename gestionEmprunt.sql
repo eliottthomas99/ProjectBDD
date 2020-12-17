@@ -360,5 +360,5 @@ CALL rendreContenu(0,60);
 #CALL emprunterContenu(0,60,14);
 #CALL emprunterContenu(0,70,14);
 #CALL rendreContenu(0,70);
-CALL reserverContenuEmprunte(20,14);
+CALL reserverContenuEmprunte(20,38);
 
