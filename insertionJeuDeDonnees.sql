@@ -1,23 +1,59 @@
 #Ajout de contenus
 CALL ajoutEFilm(1,"Star Wars Episode I",1,"George Lucas","Rick McCallum","science fiction","ENSSAT");
-CALL ajoutEFilm(2,"Star Wars Episode I",1,"George Lucas","Rick McCallum","science fiction","ENSSAT");
-CALL ajoutEFilm(3,"Star Wars Episode I",1,"George Lucas","Rick McCallum","science fiction","ENSSAT");
+CALL ajoutEFilm(2,"Star Wars Episode I",1,"George Lucas","Rick McCallum","science fiction","Nokia");
+CALL ajoutEFilm(3,"Star Wars Episode I",1,"George Lucas","Rick McCallum","science fiction","IUT");
 CALL ajoutEFilm(4,"Star Wars Episode II",2,"George Lucas","Rick McCallum","science fiction","ENSSAT");
 CALL ajoutEFilm(5,"Star Wars Episode III",3,"George Lucas","Rick McCallum","science fiction","ENSSAT");
-CALL ajoutEFilm(6,"Star Wars Episode III",3,"George Lucas","Rick McCallum","science fiction","ENSSAT");
+CALL ajoutEFilm(6,"Star Wars Episode III",3,"George Lucas","Rick McCallum","science fiction","IUT");
 CALL ajoutEFilm(7,"Star Wars Episode IV",4,"George Lucas","Rick McCallum","science fiction","ENSSAT");
 CALL ajoutEFilm(8,"Star Wars Episode V",5,"Irvin Kershner","Rick McCallum","science fiction","ENSSAT");
 CALL ajoutEFilm(9,"Star Wars Episode VI",6,"Irvin Kershner","Rick McCallum","science fiction","ENSSAT");
-CALL ajoutEFilm(10,"Star Wars Episode VI",6,"Irvin Kershner","Rick McCallum","science fiction","ENSSAT");
+CALL ajoutEFilm(10,"Star Wars Episode VI",6,"Irvin Kershner","Rick McCallum","science fiction","IUT");
 CALL ajoutEFilm(11,"Star Wars Episode VII",7,"J.J. Abrams","J.J. Abrams","science fiction","ENSSAT");
 CALL ajoutEFilm(12,"Star Wars Episode VIII",8,"Rian Johnson","Kathleen Kennedy","science fiction","ENSSAT");
-CALL ajoutEFilm(13,"Star Wars Episode VIII",8,"Rian Johnson","Kathleen Kennedy","science fiction","ENSSAT");
+CALL ajoutEFilm(13,"Star Wars Episode VIII",8,"Rian Johnson","Kathleen Kennedy","science fiction","Orange");
 CALL ajoutEFilm(14,"Star Wars Episode IX",9,"J.J. Abrams","J.J. Abrams","science fiction","ENSSAT");
-CALL ajoutEFilm(15,"Star Wars Episode IX",9,"J.J. Abrams","J.J. Abrams","science fiction","ENSSAT");
-CALL ajoutEFilm(16,"Star Wars Episode IX",9,"J.J. Abrams","J.J. Abrams","science fiction","ENSSAT");
-CALL ajoutDVD(17,"Nemo",10,"Andrew Stanton","Pixar","animation","Orange");
+CALL ajoutEFilm(15,"Star Wars Episode IX",9,"J.J. Abrams","J.J. Abrams","science fiction","IFSI");
+CALL ajoutEFilm(16,"Star Wars Episode IX",9,"J.J. Abrams","J.J. Abrams","science fiction","IUT");
+CALL ajoutDVD(17,"Nemo",10,"Andrew Stanton","Pixar","animation","Nokia");
+CALL ajoutDVD(18,"Cars",11,"John Lasseter","Pixar","animation","Orange");
+CALL ajoutDVD(19,"Cars 2",12,"John Lasseter","Pixar","animation","Orange");
+CALL ajoutDVD(20,"Cars 3",13,"Brian Fee","Pixar","animation","Orange");
+CALL ajoutDVD(21,"L affaire Thomas Crown",14,"Norman Jewison","Norman Jewison","Policier","IUT");
+CALL ajoutDVD(22,"Fast and furious",15,"Rob Cohen","Neal H. Moritz","action","IFSI");
+CALL ajoutDVD(23,"Fast and furious 2",16,"John Singleton","Neal H. Moritz","action","IFSI");
+CALL ajoutDVD(24,"Fast and furious 3",17,"Justin Lin","Neal H. Moritz","action","IFSI");
+CALL ajoutDVD(25,"Fast and furious 4",18,"Justin Lin","Neal H. Moritz","action","IFSI");
+CALL ajoutLivre(26,"La Chartreuse de Parme",19,"Stendhal","roman","Ambroise Dupont","Orange");
+CALL ajoutLivre(27,"12 regles pour une vie",20,"J. Peterson","philosophie","J ai lu","Nokia");
+CALL ajoutLivre(28,"Eloge de la gentilles",21,"E. Jaffelin","philosophie","Pocket","Nokia");
+CALL ajoutLivre(29,"Psychologie des foules",22,"G. Le Bon","philosophie","Puf","ENSSAT");
+CALL ajoutLivre(30,"The game",23,"N. Strauss","roman","J ai lu","ENSSAT");
+CALL ajoutLivre(31,"The game",23,"N. Strauss","roman","J ai lu","ENSSAT");
+CALL ajoutLivre(32,"Agir et penser comme james bond",25,"S. Garnier","philosophie","Opportun","Orange");
+CALL ajoutLivre(33,"Le banquet",26,"Platon","philosophie","Flammarion","IFSI");
+CALL ajoutLivre(34,"Le songe d une nuit d ete",27,"Shakespear","roman","Flammarion","IFSI");
+CALL ajoutEBook(34,"Reflechissez et devenez riche",28,"N. Hill","philosophie","J ai lu","IFSI");
+CALL ajoutEBook(35,"La volonte de puissance I",29,"Nietzsche","philosophie","Gallimard","ENSSAT");
+CALL ajoutEBook(36,"La volonte de puissance II",30,"Nietzsche","philosophie","Gallimard","ENSSAT");
+CALL ajoutEBook(37,"La volonte de puissance II",30,"Nietzsche","philosophie","Gallimard","IUT");
+CALL ajoutEBook(38,"Memoire, souvenirs, oublis",31,"Freud","philosophie","PBP","IUT");
+CALL ajoutEBook(39,"Fahrenheit 451",32,"R. Bradburry","science fiction","folio","IUT");
+CALL ajoutEBook(40,"Les hommes viennent de mars, les femmes de venus",34,"J. Gray","philosophie","J ai lu","Nokia");
+CALL ajoutEBook(41,"Comment se faire des amis",35,"D. Carnegie","philosophie","Livre de poche","Nokia");
+CALL ajoutEBook(42,"Comment se faire des amis",35,"D. Carnegie","philosophie","Livre de poche","Orange");
+CALL ajoutEBook(43,"Comment se faire des amis",35,"D. Carnegie","philosophie","Livre de poche","ENSSAT");
+CALL ajoutEBook(44,"Comment se faire des amis",35,"D. Carnegie","philosophie","Livre de poche","IUT");
+CALL ajoutEBook(45,"Comment se faire des amis",35,"D. Carnegie","philosophie","Livre de poche","IFSI");
+CALL ajoutEBook(46,"Comment voyager avec un saumon",36,"U. Eco","philosophie","Livre de poche","IFSI");
+CALL ajoutEBook(47,"Triomphez de vos soucis",37,"D. Carnegie","philosophie","Flammarion","ENSSAT");
+CALL ajoutEBook(48,"LA PNL pour les nuls",38,"R. Ready","philosophie","Pour les nuls","ENSSAT");
+CALL ajoutEBook(49,"LA PNL pour les nuls",38,"R. Ready","philosophie","Pour les nuls","Nokia");
+CALL ajoutLivre(50,"Metaphysique de l amour sexuel",24,"A. Schopenhauer","philosophie","Mille et une nuits","Orange");
 
-
-
+CALL ajoutContenu(106,0,"Nothing but the beat","physique","Album",39,"IFSI","Electro");
+CALL ajoutLienParticipe("David Guetta","DJ",106,0);
+CALL ajoutContenu(107,0,"Titanium","physique","Musique",39,"IFSI","Electro");
+CALL ajoutLienParticipe("David Guetta","DJ",107,0);
 
 /**********************************************************************************/
