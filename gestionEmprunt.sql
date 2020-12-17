@@ -22,9 +22,8 @@ RESERVERCONTENUEMPRUNTE_LABEL:BEGIN
 	SET @verifEmprunt = (select count(*) from emprunt join contenu on Contenu_Code_Barre=Code_Barre and Contenu_Numero_License=Numero_License
     where CodeCatalogue=contenuValCodeCatalogue and date_retour IS NULL);
     #verif emprunt vaut le nombre de contenu emprunté. on vérifie si cela correpond au total dexemplaires de ce contenu.
-    IF @verifEmprunt=(select count(*) from contenu
-    where contenu.codeCatalogue!=contenuValCodeCatalogue) THEN #il restait un contenu dispo avec ce code catalogue
-		SELECT "ça sort";
+    IF @verifEmprunt!=(select count(*) from contenu
+    where contenu.codeCatalogue=contenuValCodeCatalogue) THEN #il restait un contenu dispo avec ce code catalogue
         LEAVE RESERVERCONTENUEMPRUNTE_LABEL;
     END IF;
     
@@ -32,7 +31,6 @@ RESERVERCONTENUEMPRUNTE_LABEL:BEGIN
     # On vérifie qu'il n'ai pas de pénalité.
     SET @penalite = (SELECT penalite from abonne where numero=abonneValNumero);
     IF @penalite!=0 THEN 
-    SELECT "ça sort";
 		LEAVE RESERVERCONTENUEMPRUNTE_LABEL;
 	END IF;
     

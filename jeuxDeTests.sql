@@ -75,7 +75,7 @@ CALL reserverContenuEmprunte(41,39); #l'abonne réserve le contenu. Sa demande p
 # On essaie de reserver un contenu qui est dispo
 # On reserve tous les star wars episode 3
 # SELECT * FROM bibliotheque.demande; # pas encore de demande
-CALL reserverContenuEmprunte(3, 40);
+# CALL reserverContenuEmprunte(3, 1);
 # SELECT * FROM bibliotheque.demande; # pas de demande enregistre
 
 
@@ -113,14 +113,20 @@ CALL reserverContenuEmprunte(3, 40);
 
 /*
 # CAS 42 : supprimerDemandesDepassees
-# Tous les star wars episode 3 sont empruntés, celui de code barre 5 a ete rendu il y a plus que 7 jours
-INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `date_retour`, `renouvellement`) VALUES ('0', '5', '38', '2020-10-15', '2020-12-01', '0');
-INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '39', '2020-10-15', '0');
+# Tous les star wars episode 3 sont empruntes (il y en a 2, celui de numero license 5 et celui de numero license 6), celui de numero license 5 a ete rendu il y a plus que 7 jours
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `date_retour`, `renouvellement`) VALUES ('0', '5', '1', '2020-10-15', '2020-12-01', '0'); # On creer un emprunt pour le contenu de numero license 5 et qui a ete rendu il y a plus (+) de 7 jours
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '2', '2020-10-15', '0'); # On creer un emprunt pour le contenu de numero license 6 mais il n a pas encore ete rendu
+# Tous les exemplaires du Banquet de Platon sont empruntes mais celui de code barre 33 a ete retourne il y a moins de 7 jours (mettre a jour la date manuellement au besoin)
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `date_retour`, `renouvellement`) VALUES ('33', '0', '1', '2020-10-15', '2020-12-17', '0'); # On creer un emprunt pour le contenu de numero license 33 et qui a ete rendu il y a moins de 7 jours (mettre a jours la date manuellement au besoin)
+
 # Une reservation est faite pour tous les star wars episode 3
-INSERT INTO `bibliotheque`.`demande` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_demande`) VALUES ('0', '5', '40', '2020-11-30');
-INSERT INTO `bibliotheque`.`demande` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_demande`) VALUES ('0', '6', '40', '2020-11-30');
+INSERT INTO `bibliotheque`.`demande` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_demande`) VALUES ('0', '5', '3', '2020-11-30'); # On fait une demande sur le contenu de numero license 5
+INSERT INTO `bibliotheque`.`demande` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_demande`) VALUES ('0', '6', '3', '2020-11-30'); # On fait une demande sur le contenu de numero license 6
+# Une reservation est faite pour tous les exemplaires du Banquet
+INSERT INTO `bibliotheque`.`demande` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_demande`) VALUES ('33', '0', '3', '2020-11-30'); # On fait une demande sur le contenu de numero license 33
+
 # On supprime toutes les demandes qui datent d il y a plus de 7 jours
-# SELECT * FROM bibliotheque.demande; # Les demandes sont presentes
-CALL supprimerDemandesDepassees();
-# SELECT * FROM bibliotheque.demande; # les demandes ont ete supprimees
+# SELECT * FROM bibliotheque.demande; # Toutes les demandes sont presentes
+CALL supprimerDemandesDepassees(); # il y a une demande a supprimer, un exemplaire star wars episode 3 a ete rendu il y a plus de 7 jours
+# SELECT * FROM bibliotheque.demande; # les demandes concernant star wars episode 3 ont ete supprimees
 */
