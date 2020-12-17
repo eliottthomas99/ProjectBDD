@@ -39,6 +39,62 @@ use bibliotheque;
 # CAS 12 : TEST procedure ajoutArtiste
 #CALL ajoutArtiste('Eric THOMAS', 'guitariste'); #On ajoute Eric THOMAS en tant qu artiste
 
+# CAS 13 : TEST procedure ajoutContenu
+#CALL ajoutContenu(150,0,"La formule du savoir","physique","livre",135,"IFSI","philosophie"); #On ajoute un Contenu (ici un livre) à l'IFSI
+#CALL ajoutLienParticipe("Lê Nguyen Hoang","ecrivain",150,0); #On precise le ou les artistes de cette manière
+
+# CAS 14 : TEST procedure ajoutDecrit
+#CALL ajoutDecrit("science",150,0 ); #On indique que le contenu (150,0) est également scientifique -> Ne fonctionne pas car "science" n'a pas été ajouté comme genre
+
+# CAS 15 : TEST procedure ajoutLienDecrit
+#CALL ajoutLienDecrit("science", 150, 0); #On ajoute au contenu (150,0) le genre "science" -> fonctionne car on a cette fois ci créé le genre "science" avant de l'ajouter
+
+# CAS 16 : TEST procedure ajoutDVD
+#CALL ajoutDVD(151,"Imitation Game",160,"Morten Tyldum","Ampersand Pictures","biographie","IUT"); #On ajoute un DVD à l IUT
+
+# CAS 17 : TEST procedure ajoutEBook
+#CALL ajoutEBook(152,"Eragon",113,"Chistopher Paolini","fantastique","Bayard Jeunesse","IFSI"); #On ajoute un ebook à l IFSI
+
+# CAS 18 : TEST procedure ajoutEdite
+#CALL ajoutEdite("Seyes",0,152); #On dit que le contenu (0,152) est co edite avec Seyes -> Ne fonctionne pas car "seyes" na pas ete cree comme editeur
+
+# CAS 19 : TEST procedure ajoutLienEdite
+CALL ajoutLienEdite("Seyes", 0, 152); #On dit que le contenu (0,152) est co edite avec Seyes -> Fonctionne cette fois car cree Seyes en tant qu editeur avant de le lier au contenu
+
+# CAS 18 : TEST procedure ajoutParticipe
+#CALL ajoutParticipe("Julien THOMAS",0,152); #On dit que le contenu (0,152) est co ecrit avec Julien THOMAS
+
+# CAS 19 : TEST procedure ajoutPossede
+#CALL ajoutPossede("ENSSAT",0,152); #On dit que le contenu (0,152) appartient également à l'ENSSAT
+
+# CAS 20 : TEST procedure ajoutGenre
+#CALL ajoutGenre("comedie musicale"); #On crée un nouveau genre
+
+# CAS 21 : TEST procedure ajoutLivre
+#CALL ajoutLivre(180,"Le Seigneur des anneaux",135,"J. R. R. Tolkien","fantastique","Folio junior","Nokia"); #On ajoute le seigneur des anneaux chez Nokia
+
+# CAS 22 : TEST procedure ajoutEtablissement
+#CALL ajoutEtablissement("mediatheque de Lannion"); #On ajoute la "mediatheque de Lannion" aux etablissements
+
+# CAS 23 : TEST procedure ajoutEFilm
+#CALL ajoutEFilm(200,"Le Hobbit",200,"Peter Jackson","Peter Jackson","fantastique","IUT"); #On ajoute le Hobbit au format numérique pour l'IUT
+
+
+
+# CAS 25 : TEST procedure ajoutLienEdite
+#CALL ajoutLienEdite("Gallimard", 180, 0); #On ajoute au contenu (180,0) l'éditeur "Gallimard"
+
+# CAS 26 : TEST procedure ajoutLienParticipe
+#CALL ajoutLienParticipe("J. R. R. Tolkien","auteur", 0, 200); #On ajoute au contenu (0,200) l auteur J R R Tolkien
+
+# CAS 27 : TEST procedure ajoutLienPossede
+#CALL ajoutLienPossede("IUT", 0, 200); #On dit que le contenu (0,200) est également possédé
+
+
+
+# CAS 28 : TEST procedure ajoutEditeur
+#CALL ajoutEditeur("Larousse"); #On ajoute l editeur "Larousse"
+
 
 
 

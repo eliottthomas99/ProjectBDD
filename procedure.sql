@@ -463,7 +463,7 @@ END;$$
 
 DROP PROCEDURE IF EXISTS ajoutEBook $$
 CREATE PROCEDURE ajoutEBook(
-      IN contenuValCodeBarre INT,
+      IN contenuValNumeroLicense INT,
       contenuValTitre VARCHAR(45),
       contenuValCodeCatalogue INT,
       artisteValAuteur VARCHAR(45),
@@ -475,7 +475,7 @@ ajoutEBook_LABEL :BEGIN
       IF (
             SELECT COUNT(*)
             FROM contenu
-            WHERE Code_Barre = contenuValCodeBarre
+            WHERE Numero_License = contenuValNumeroLicense
       ) >= 1 THEN LEAVE ajoutEBook_LABEL;
       END IF;
       INSERT INTO contenu (
@@ -486,8 +486,8 @@ ajoutEBook_LABEL :BEGIN
                   Support,
                   CodeCatalogue
             )
-      SELECT contenuValCodeBarre,
-            0,
+      SELECT 0,
+            contenuValNumeroLicense,
             contenuValTitre,
             'numérique',
             'ebook',
@@ -496,7 +496,7 @@ ajoutEBook_LABEL :BEGIN
       WHERE NOT EXISTS (
                   SELECT *
                   FROM contenu
-                  WHERE Code_Barre = contenuValCodeBarre
+                  WHERE Numero_License = contenuValNumeroLicense
                   LIMIT 1
             );
       CALL ajoutArtiste(artisteValAuteur, "ecrivain");
@@ -505,10 +505,10 @@ ajoutEBook_LABEL :BEGIN
       CALL ajoutEtablissement(etablissementValNom);
 
       #tables de relations
-      CALL ajoutEdite(editeurValEditeur, contenuValCodeBarre, 0);
-      CALL ajoutParticipe(artisteValAuteur, "ecrivain", contenuValCodeBarre, 0);
-      CALL ajoutDecrit(genreValGenre, contenuValCodeBarre, 0);
-      CALL ajoutPossede(etablissementValNom, contenuValCodeBarre, 0);
+      CALL ajoutEdite(editeurValEditeur, 0, contenuValNumeroLicense);
+      CALL ajoutParticipe(artisteValAuteur, "ecrivain", 0, contenuValNumeroLicense);
+      CALL ajoutDecrit(genreValGenre, 0, contenuValNumeroLicense);
+      CALL ajoutPossede(etablissementValNom, 0, contenuValNumeroLicense);
 END;$$
 
 ###########################################################################################################
