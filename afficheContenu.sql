@@ -57,7 +57,7 @@ FROM Contenu JOIN Participe
 ON Contenu.Code_Barre =Participe.Contenu_Code_Barre AND Contenu.Numero_License = Participe.Contenu_Numero_License
 JOIN Artiste 
 ON artiste.id=Participe.Artiste_id
-WHERE Artiste.nom=artisteValNom;
+WHERE Artiste.nom LIKE CONCAT("%",artisteValNom,"%");
 
 
 END;
@@ -74,7 +74,7 @@ FROM Contenu JOIN Décrit
 ON Contenu.Code_Barre =Décrit.Contenu_Code_Barre AND Contenu.Numero_License = Décrit.Contenu_Numero_License
 JOIN Genre 
 ON genre.id=Décrit.Genre_id
-WHERE Genre.nom=genreValGenre;
+WHERE Genre.nom LIKE CONCAT("%",genreValGenre,"%");
 
 
 END;
@@ -92,7 +92,7 @@ FROM Contenu JOIN edite
 ON Contenu.Code_Barre =edite.Contenu_Code_Barre AND Contenu.Numero_License = edite.Contenu_Numero_License
 JOIN Editeur 
 ON Editeur.id=edite.Editeur_id
-WHERE Editeur.nom=editeurValNom;
+WHERE Editeur.nom LIKE CONCAT("%",editeurValNom,"%");
 
 
 END;
@@ -110,7 +110,7 @@ FROM Contenu JOIN possede
 ON Contenu.Code_Barre =possede.Contenu_Code_Barre AND Contenu.Numero_License = possede.Contenu_Numero_License
 JOIN Etablissement 
 ON Etablissement.id=possede.Etablissement_id
-WHERE Etablissement.nom=etablissementValNom;
+WHERE Etablissement.nom LIKE CONCAT("%",etablissementValNom,"%");
 
 
 END;
