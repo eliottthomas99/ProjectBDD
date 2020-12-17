@@ -453,8 +453,8 @@ AJOUTCONTENU_LABEL :BEGIN
       CALL ajoutEtablissement(etablissementValNom);
 
       #tables de relations
-      CALL ajoutDecrit(genreValGenre, 0, contenuValNumeroLicense);
-      CALL ajoutPossede(etablissementValNom, 0, contenuValNumeroLicense);
+      CALL ajoutDecrit(genreValGenre, contenuValCodeBarre, contenuValNumeroLicense);
+      CALL ajoutPossede(etablissementValNom, contenuValCodeBarre, contenuValNumeroLicense);
 END;$$
 
 ############################################################################

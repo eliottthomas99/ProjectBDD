@@ -1,3 +1,5 @@
+use bibliotheque;
+
 #Ajout de contenus
 CALL ajoutEFilm(1,"Star Wars Episode I",1,"George Lucas","Rick McCallum","science fiction","ENSSAT");
 CALL ajoutEFilm(2,"Star Wars Episode I",1,"George Lucas","Rick McCallum","science fiction","Nokia");
@@ -39,7 +41,7 @@ CALL ajoutEBook(36,"La volonte de puissance II",30,"Nietzsche","philosophie","Ga
 CALL ajoutEBook(37,"La volonte de puissance II",30,"Nietzsche","philosophie","Gallimard","IUT");
 CALL ajoutEBook(38,"Memoire, souvenirs, oublis",31,"Freud","philosophie","PBP","IUT");
 CALL ajoutEBook(39,"Fahrenheit 451",32,"R. Bradburry","science fiction","folio","IUT");
-CALL ajoutEBook(40,"Les hommes viennent de mars, les femmes de venus",34,"J. Gray","philosophie","J ai lu","Nokia");
+CALL ajoutEBook(40,"Les hommes viennent de mars",34,"J. Gray","philosophie","J ai lu","Nokia");
 CALL ajoutEBook(41,"Comment se faire des amis",35,"D. Carnegie","philosophie","Livre de poche","Nokia");
 CALL ajoutEBook(42,"Comment se faire des amis",35,"D. Carnegie","philosophie","Livre de poche","Orange");
 CALL ajoutEBook(43,"Comment se faire des amis",35,"D. Carnegie","philosophie","Livre de poche","ENSSAT");
@@ -51,11 +53,14 @@ CALL ajoutEBook(48,"LA PNL pour les nuls",38,"R. Ready","philosophie","Pour les 
 CALL ajoutEBook(49,"LA PNL pour les nuls",38,"R. Ready","philosophie","Pour les nuls","Nokia");
 CALL ajoutLivre(50,"Metaphysique de l amour sexuel",24,"A. Schopenhauer","philosophie","Mille et une nuits","Orange");
 
-CALL ajoutContenu(106,0,"Nothing but the beat","physique","Album",39,"IFSI","Electro");
+CALL ajoutContenu(106,0,"Nothing but the beat","physique","album",39,"IFSI","electro");
 CALL ajoutLienParticipe("David Guetta","DJ",106,0);
-CALL ajoutContenu(107,0,"Titanium","physique","Musique",39,"IFSI","Electro");
+CALL ajoutContenu(107,0,"Titanium","physique","musique",40,"IFSI","electro");
 CALL ajoutLienParticipe("David Guetta","DJ",107,0);
-
+CALL ajoutContenu(108,0,"Back in black","physique","album",41,"IFSI","rock");
+CALL ajoutLienParticipe("ACDC","groupe",108,0);
+CALL ajoutContenu(109,0,"Breath of the wild","numerique","jeu video",41,"ENSSAT","aventure");
+CALL ajoutLienParticipe("Eiji Aonuma","direteur",109,0);
 /**********************************************************************************/
 
 
