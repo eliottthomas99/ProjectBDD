@@ -120,6 +120,16 @@ CALL reserverContenuEmprunte(41,39); #l'abonne réserve le contenu. Sa demande p
 
 
 
+
+/*
+# CAS 36 proc_retrait_abonne
+# retire tous les abonnes qui sont inscrit depuis plus d un an
+CALL ajoutAbonne("MANSON","Marilyn", "mmanson@enssat.fr"); # On ajoute un personne qui est membre depuis moins de  an, donc a ne pas retirer
+INSERT INTO `bibliotheque`.`abonne` (`numero`, `nom`, `prenom`, `adresse`, `dateAdhesion`, `penalite`) VALUES ('100', 'COBAIN', 'Kurt', 'kcobain@enssat.fr', '2018-01-01', '0'); # On ajoute un abonne qui s est abonne en 2018, il a plus d un an, il faut donc le retirer
+CALL proc_retrait_abonne();
+*/
+
+
 /*
 # CAS 37 : renouvelerAbonnement
 # Si l'abonne n existe pas
