@@ -89,34 +89,6 @@ use bibliotheque;
 #CALL ajoutEditeur("Larousse"); #On ajoute l editeur "Larousse"
 
 
-
-
-
-
-
-
-
-
-
-/*
-#CAS12 : TEST procédure emprunterContenu
-CALL emprunterContenu(72,0,38); #l'abonne 38 souhaite emprunter un contenu et il est libre
-#CALL afficherTout(); #on regarde si la colonne emprunte est passé à 1 pour le contenu (72,0)
-*/
-
-
-
-/*
-#CAS2 : l'utilisateur souhaite emprunter un contenu et il n'est pas libre.
-CALL emprunterContenu(108,0,38); # L'abonne 38 emprunte le seul exemplaire de Back in black
-CALL emprunterContenu(108,0,39); #  pour l'abonne 39 : l'emprunt echoue
-CALL reserverContenuEmprunte(41,39); #l'abonne réserve le contenu. Sa demande porte sur le CodeCatalogue. 
-*/
-
-
-#################################################
-
-
 /*
 # CAS 29 : echancier
 # affiche tous les contenus empruntes qui sont en retard et l abonne qui les a empruntes
@@ -131,7 +103,6 @@ INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_Lice
 # le resultat attendu est l abonne 2 a 2 retard pour le contenu 4 et 5, et l abonne 3 a un retard sur le contenu 6
 CALL echeancier();
 */
-
 
 
 /*
