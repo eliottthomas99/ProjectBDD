@@ -118,6 +118,71 @@ CALL reserverContenuEmprunte(41,39); #l'abonne réserve le contenu. Sa demande p
 
 
 
+/*
+# CAS 33 : emprunterContenu
+# On souhaite emprunter un contenu
+# SELECT * FROM bibliotheque.emprunt; # On regarde les emprunts en cours
+CALL emprunterContenu(0,5,1); # l abonne emprunte un exemplaire de star wars episode 3
+# SELECT * FROM bibliotheque.emprunt; # On verifie que notre enprunt a bien ete pris en compte
+*/
+
+
+/*
+# CAS 33* : emprunterContenu
+# On souhaite emprunter un contenu qui est deja emprunte
+# SELECT * FROM bibliotheque.emprunt; # On regarde les emprunts en cours
+CALL emprunterContenu(0,5,1); # l abonne 1 emprunte un exemplaire de star wars episode 3
+CALL emprunterContenu(0,5,2); # l abonne 2 souhaite emprunter un exemplaire de star wars episode 3 qui est deja emprunte
+# SELECT * FROM bibliotheque.emprunt; # L emprunt de l abonne 2 n a pas ete enregistre
+*/
+
+
+/*
+# CAS 33** : emprunterContenu
+# On souhaite emprunter un contenu qui est disponible mais qui est "mis de cote"
+# SELECT * FROM bibliotheque.emprunt; # On regarde les emprunts en cours
+CALL emprunterContenu(0,4,1); # l abonne 1 emprunte l unique exemplaire de star wars episode 2
+CALL reserverContenuEmprunte(2,3); # l abonne 3 reserve tous les contenus de code catalogue 2 (star wars episode 2)
+call rendreContenu(0,4); # l abonne 1 rend star wars episode 2, le contenu est de nouveau disponible
+CALL emprunterContenu(0,4,2); # l abonne 2 souhaite emprunter un exemplaire de star wars episode  qui est disponible
+# SELECT * FROM bibliotheque.emprunt; # L emprunt de l abonne 2 a echoue car le contenu est mis de cote et qu il ne l a pas reserve
+*/
+
+
+
+# CAS 33*** : emprunterContenu
+# On souhaite emprunter un contenu qui est disponible mais qui est "mis de cote"
+# SELECT * FROM bibliotheque.emprunt; # On regarde les emprunts en cours
+CALL emprunterContenu(0,4,1); # l abonne 1 emprunte l unique exemplaire de star wars episode 2
+CALL reserverContenuEmprunte(2,3); # l abonne 3 reserve tous les contenus de code catalogue 2 (star wars episode 2)
+call rendreContenu(0,4); # l abonne 1 rend star wars episode 2, le contenu est de nouveau disponible
+CALL emprunterContenu(0,4,3); # l abonne 3 souhaite emprunter un exemplaire de star wars episode  qui est disponible
+# SELECT * FROM bibliotheque.emprunt; # L emprunt de l abone 3 s est realise car il avait fait une reservation (le contenu etait "mis de cote")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+# CAS 34 : nombreEmprunt
+# procedure ayant pour but de faire des statistique, affiche le nombre total d emprunts qu a fait un abonne depuis son adhesion
+# CALL nombreEmprunt(1); # affiche le nombre total d emprunt de l abonne 1
+CALL emprunterContenu(0,2,1);
+CALL emprunterContenu(0,4,1);
+CALL emprunterContenu(0,5,1);
+# CALL nombreEmprunt(1); # affiche 3 de plus que tout a l heure car on a emprunte 3 contenus en plus
+*/
 
 
 /*
