@@ -125,12 +125,13 @@ CALL emprunterContenu(0,1,1); # l abonne emprunte un contenu
 CALL emprunterContenu(0,2,1); # l abonne emprunte un contenu
 CALL emprunterContenu(0,3,1); # l abonne emprunte un contenu
 # on ajoutes des contenus qui sont en retard
-INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '4', '2', '2020-01-01', '0'); # l abonne 2 a emprunte le contenu de code license 4 le 1er janvier 2020, il est donc en retarc
-INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '5', '2', '2020-01-01', '0'); # l abonne 2 a emprunte le contenu de code license 5 le 1er janvier 2020, il est donc en retarc
-INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '3', '2020-01-01', '0'); # l abonne 3 a emprunte le contenu de code license 6 le 1er janvier 2020, il est donc en retarc
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '4', '2', '2020-01-01', '0'); # l abonne 2 a emprunte le contenu de code license 4 le 1er janvier 2020, il est donc en retard
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '5', '2', '2020-01-01', '0'); # l abonne 2 a emprunte le contenu de code license 5 le 1er janvier 2020, il est donc en retard
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '3', '2020-01-01', '0'); # l abonne 3 a emprunte le contenu de code license 6 le 1er janvier 2020, il est donc en retard
 # le resultat attendu est l abonne 2 a 2 retard pour le contenu 4 et 5, et l abonne 3 a un retard sur le contenu 6
 CALL echeancier();
 */
+
 
 
 /*
