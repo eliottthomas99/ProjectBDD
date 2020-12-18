@@ -399,7 +399,7 @@ CALL reserverContenuEmprunte(3, 8);
 # SELECT * FROM bibliotheque.demande; # pas de demande enregistre
 */
 
-/*
+
 # CAS 41 : supportPopulaire
 # Affiche le nombre total de fois d emprunts par support
 CALL emprunterContenu(0,1,1); # l abonne emprunte un EFilm

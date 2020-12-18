@@ -1,0 +1,9 @@
+Il est très fortement recommandé de lire l’intégralité du rapport avant toute manipulation.
+
+Pour pouvoir tester notre base de données la démarche à suivre est la suivante :
+1.  Ouvrir le fichier “2021_INFO2_THOMAS_THOMAS.mwb” et faire le “forward engineering”.
+Ceci va recréer la base de données mais sans la remplir.
+2.  Pour remplir la base de données il faut exécuter le fichier “insertionJeuDeDonnees.sql”.
+3.  Dans le cas du déploiement de la base de données il faudra ajouter les Events, pour ce faire il faut exécuter le fichier “event.sql”. Ici il est déconseillé de le faire dans un premier temps car les Events pourraient interférer avec les tests.
+4.  Dans le fichier “jeuxDeTests.sql” se trouvent tous les tests permettant de vérifier le bon comportement de nos procédures. Chaque test est individuellement commenté. Pour effectuer un test il faut décommenter le bloc qui nous intéresse. 
+/!\ Attention /!\ Il faudra parfois supprimer manuellement les entrées ajoutées par certains tests pour ne pas interférer avec les autres tests.
