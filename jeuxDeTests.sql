@@ -134,7 +134,7 @@ CALL echeancier();
 
 
 
-
+/*
 # CAS 30 : contenuPopulaire
 CALL emprunterContenu(0,1,1); # l abonne emprunte un contenu
 CALL emprunterContenu(0,2,1); # l abonne emprunte un contenu
@@ -147,7 +147,7 @@ CALL emprunterContenu(0,8,2); # l abonne emprunte un contenu
 CALL emprunterContenu(0,9,2); # l abonne emprunte un contenu
 CALL emprunterContenu(0,10,2); # l abonne emprunte un contenu
 CALL contenuPopulaire(3); # affiche les n (ici 3) contenus totalisant le plus d emprunts
-
+*/
 
 
 /*
@@ -378,14 +378,14 @@ CALL renouvelerEmprunt(0,6); # l emprunt n est pas renouvele car on n est pas da
 */
 
 
-/*
+
 # CAS 40 : reserverContenuEmprunte
 # On essaie de reserver un contenu qui est dispo
 # On reserve tous les star wars episode 3
 # SELECT * FROM bibliotheque.demande; # pas encore de demande
  CALL reserverContenuEmprunte(3, 1);
 # SELECT * FROM bibliotheque.demande; # pas de demande enregistre
-*/
+
 
 
 /*
