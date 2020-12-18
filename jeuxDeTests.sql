@@ -139,7 +139,7 @@ CALL emprunterContenu(0,5,2); # l abonne 2 souhaite emprunter un exemplaire de s
 
 /*
 # CAS 33** : emprunterContenu
-# On souhaite emprunter un contenu qui est disponible mais qui est "mis de cote"
+# On souhaite emprunter un contenu qui est disponible mais qui est "mis de cote" par quelqu un d autre
 # SELECT * FROM bibliotheque.emprunt; # On regarde les emprunts en cours
 CALL emprunterContenu(0,4,1); # l abonne 1 emprunte l unique exemplaire de star wars episode 2
 CALL reserverContenuEmprunte(2,3); # l abonne 3 reserve tous les contenus de code catalogue 2 (star wars episode 2)
@@ -151,7 +151,7 @@ CALL emprunterContenu(0,4,2); # l abonne 2 souhaite emprunter un exemplaire de s
 
 /*
 # CAS 33*** : emprunterContenu
-# On souhaite emprunter un contenu qui est disponible mais qui est "mis de cote"
+# On souhaite emprunter un contenu qui est disponible mais qui est "mis de cote" 
 # SELECT * FROM bibliotheque.emprunt; # On regarde les emprunts en cours
 CALL emprunterContenu(0,4,1); # l abonne 1 emprunte l unique exemplaire de star wars episode 2
 CALL reserverContenuEmprunte(2,3); # l abonne 3 reserve tous les contenus de code catalogue 2 (star wars episode 2)
@@ -164,8 +164,32 @@ SELECT * FROM bibliotheque.demande; # l emprunt a ete retire des demandes car le
 */
 
 
+/*
+# CAS 33**** : emprunterContenu
+# On souhaite emprunter  plein de contenus mais il y a une limite a 5
+# SELECT * FROM bibliotheque.emprunt; # On regarde les emprunts en cours
+CALL emprunterContenu(0,1,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,2,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,3,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,4,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,5,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,6,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,7,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,8,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,9,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,10,1); # l abonne emprunte un contenu
+# SELECT * FROM bibliotheque.emprunt; # On vois que seul les 5 premiers emprunts on ete pris en compte
+*/
 
 
+/*
+# CAS 33***** : emprunterContenu
+# On souhaite emprunter un contenu
+# SELECT * FROM bibliotheque.emprunt; # On regarde les emprunts en cours
+UPDATE `bibliotheque`.`abonne` SET `penalite` = '10' WHERE (`numero` = '1'); # l abonne 1 a une penalite trop elevee pour emprunter
+CALL emprunterContenu(0,5,1); # l abonne emprunte un exemplaire de star wars episode 3
+# SELECT * FROM bibliotheque.emprunt; # L emprunt ne s est pas fait a cause du niveau de penalite de l abonnee
+*/
 
 
 
