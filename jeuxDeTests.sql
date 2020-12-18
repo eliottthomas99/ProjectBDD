@@ -117,6 +117,67 @@ CALL reserverContenuEmprunte(41,39); #l'abonne réserve le contenu. Sa demande p
 #################################################
 
 
+/*
+# CAS 29 : echancier
+# affiche tous les contenus empruntes qui sont en retard et l abonne qui les a empruntes
+# les 3 contenus suivant ne sont pas en retard donc ils ne seront pas affiches
+CALL emprunterContenu(0,1,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,2,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,3,1); # l abonne emprunte un contenu
+# on ajoutes des contenus qui sont en retard
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '4', '2', '2020-01-01', '0'); # l abonne 2 a emprunte le contenu de code license 4 le 1er janvier 2020, il est donc en retarc
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '5', '2', '2020-01-01', '0'); # l abonne 2 a emprunte le contenu de code license 5 le 1er janvier 2020, il est donc en retarc
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '3', '2020-01-01', '0'); # l abonne 3 a emprunte le contenu de code license 6 le 1er janvier 2020, il est donc en retarc
+# le resultat attendu est l abonne 2 a 2 retard pour le contenu 4 et 5, et l abonne 3 a un retard sur le contenu 6
+CALL echeancier();
+*/
+
+
+/*
+# CAS 30 : contenuPopulaire
+CALL emprunterContenu(0,1,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,2,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,3,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,4,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,5,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,6,2); # l abonne emprunte un contenu
+CALL emprunterContenu(0,7,2); # l abonne emprunte un contenu
+CALL emprunterContenu(0,8,2); # l abonne emprunte un contenu
+CALL emprunterContenu(0,9,2); # l abonne emprunte un contenu
+CALL emprunterContenu(0,10,2); # l abonne emprunte un contenu
+CALL contenuPopulaire(3); # affiche les n (ici 3) contenus totalisant le plus d emprunts
+*/
+
+
+/*
+# CAS 31 : empruntCount
+# affiche le nombre d emprunts de contenu en cours par etablissement
+CALL emprunterContenu(0,1,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,2,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,3,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,4,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,5,1); # l abonne emprunte un contenu
+CALL emprunterContenu(0,6,2); # l abonne emprunte un contenu
+CALL emprunterContenu(0,7,2); # l abonne emprunte un contenu
+CALL emprunterContenu(0,8,2); # l abonne emprunte un contenu
+CALL emprunterContenu(0,9,2); # l abonne emprunte un contenu
+CALL emprunterContenu(0,10,2); # l abonne emprunte un contenu
+CALL empruntCount(); # on voit qu il a bien 10 emprunt en cours reparti dans differents etablissements
+*/
+
+
+/*
+# CAS 32 : clientEmpruntantCount
+# Compte tous les clients distincts ayant au moins un emprunt en cours
+CALL emprunterContenu(0,1,1); # l abonne 1 a 2 emprunts en cours
+CALL emprunterContenu(0,2,1);
+CALL emprunterContenu(0,3,2); # l abonne 2 a 1 emprunts en cours
+CALL emprunterContenu(0,4,3);
+CALL rendreContenu(0,4); # l abonne 3 a 0 emprunts en cours car il a rendu son emprunt
+# Ici la reponse attendu est 2
+CALL clientEmpruntantCount;
+*/
+
 
 /*
 # CAS 33 : emprunterContenu
@@ -189,14 +250,9 @@ CALL emprunterContenu(0,10,1); # l abonne emprunte un contenu
 UPDATE `bibliotheque`.`abonne` SET `penalite` = '10' WHERE (`numero` = '1'); # l abonne 1 a une penalite trop elevee pour emprunter
 CALL emprunterContenu(0,5,1); # l abonne emprunte un exemplaire de star wars episode 3
 # SELECT * FROM bibliotheque.emprunt; # L emprunt ne s est pas fait a cause du niveau de penalite de l abonnee
+
+# UPDATE `bibliotheque`.`abonne` SET `penalite` = '0' WHERE (`numero` = '1'); # !! attention a bien remettre la penalite a 0 pour ne pas perturber les autres tests
 */
-
-
-
-
-
-
-
 
 
 /*
