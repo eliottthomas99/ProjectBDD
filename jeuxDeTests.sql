@@ -383,7 +383,7 @@ CALL renouvelerEmprunt(0,6); # l emprunt n est pas renouvele car on n est pas da
 # On essaie de reserver un contenu qui est dispo
 # On reserve tous les star wars episode 3
 # SELECT * FROM bibliotheque.demande; # pas encore de demande
- CALL reserverContenuEmprunte(3, 1);
+ #CALL reserverContenuEmprunte(3, 1);
 # SELECT * FROM bibliotheque.demande; # pas de demande enregistre
 
 
@@ -405,7 +405,7 @@ CALL reserverContenuEmprunte(3, 8);
 # CAS 40** : reserverContenuEmprunte
 # On reserve tous les contenus qui ont le meme code catalogue si aucun des contenu avec ce code catalogue n est dispo
 # On reserve tous les star wars episode 3
-INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `date_retour`, `renouvellement`) VALUES ('0', '5', '1', '2020-10-01', '2020-12-15', '0'); # On reserve le contenu de numero de license 5 mais on ne le rend pas encore
+INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `date_retour`, `renouvellement`) VALUES ('0', '5', '1', '2020-10-01', '2020-12-15', '0'); # On reserve le contenu de numero de license 5 mais on e rend
 INSERT INTO `bibliotheque`.`emprunt` (`Contenu_Code_Barre`, `Contenu_Numero_License`, `Abonne_numero`, `date_pret`, `renouvellement`) VALUES ('0', '6', '2', '2020-10-15', '0'); # On reserve le contenu de numero de license 6 mais on ne le rend pas encore
 # On fait une demande sur star wars episode 3
 # SELECT * FROM bibliotheque.demande; # pas encore de demande
@@ -414,7 +414,7 @@ CALL reserverContenuEmprunte(3, 8);
 */
 
 
-/*
+
 # CAS 40*** : reserverContenuEmprunte
 # On reserve tous les contenus qui ont le meme code catalogue si aucun des contenu avec ce code catalogue n est dispo 
 # On reserve tous les star wars episode 3
@@ -426,7 +426,7 @@ UPDATE `bibliotheque`.`abonne` SET `penalite` = '1337' WHERE (`numero` = '8'); #
 # SELECT * FROM bibliotheque.demande; # pas encore de demande
 CALL reserverContenuEmprunte(3, 8);
 # SELECT * FROM bibliotheque.demande; # pas de demande enregistre
-*/
+
 
 
 # CAS 41 : supportPopulaire
