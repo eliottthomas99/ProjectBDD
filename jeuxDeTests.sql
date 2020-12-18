@@ -414,7 +414,7 @@ CALL reserverContenuEmprunte(3, 8);
 */
 
 
-
+/*
 # CAS 40*** : reserverContenuEmprunte
 # On reserve tous les contenus qui ont le meme code catalogue si aucun des contenu avec ce code catalogue n est dispo 
 # On reserve tous les star wars episode 3
@@ -426,12 +426,21 @@ UPDATE `bibliotheque`.`abonne` SET `penalite` = '1337' WHERE (`numero` = '8'); #
 # SELECT * FROM bibliotheque.demande; # pas encore de demande
 CALL reserverContenuEmprunte(3, 8);
 # SELECT * FROM bibliotheque.demande; # pas de demande enregistre
+*/
 
-
-
+/*
 # CAS 41 : supportPopulaire
 # Affiche le nombre total de fois d emprunts par support
-# CALL supportPopulaire(1); # prend en parametre les N supports les plus populaire a afficher
+CALL emprunterContenu(0,1,1); # l abonne emprunte un EFilm
+CALL emprunterContenu(0,2,1); # l abonne emprunte un EFilm
+CALL emprunterContenu(0,3,1); # l abonne emprunte un EFilm
+CALL emprunterContenu(0,4,1); # l abonne emprunte un EFilm
+CALL emprunterContenu(17,0,2); # l abonne emprunte un DVD
+CALL emprunterContenu(26,0,2); # l abonne emprunte un livre
+CALL emprunterContenu(27,0,3); # l abonne emprunte un livre
+CALL emprunterContenu(0,34,3); # l abonne emprunte un EBook
+CALL emprunterContenu(0,35,3); # l abonne emprunte un EBook
+CALL supportPopulaire(1); # prend en parametre les N supports les plus populaire a afficher
 
 
 /*
