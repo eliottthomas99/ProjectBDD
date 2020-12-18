@@ -134,7 +134,7 @@ CALL echeancier();
 
 
 
-/*
+
 # CAS 30 : contenuPopulaire
 CALL emprunterContenu(0,1,1); # l abonne emprunte un contenu
 CALL emprunterContenu(0,2,1); # l abonne emprunte un contenu
@@ -147,7 +147,7 @@ CALL emprunterContenu(0,8,2); # l abonne emprunte un contenu
 CALL emprunterContenu(0,9,2); # l abonne emprunte un contenu
 CALL emprunterContenu(0,10,2); # l abonne emprunte un contenu
 CALL contenuPopulaire(3); # affiche les n (ici 3) contenus totalisant le plus d emprunts
-*/
+
 
 
 /*
