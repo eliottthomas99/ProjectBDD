@@ -149,18 +149,19 @@ CALL emprunterContenu(0,4,2); # l abonne 2 souhaite emprunter un exemplaire de s
 */
 
 
-
+/*
 # CAS 33*** : emprunterContenu
 # On souhaite emprunter un contenu qui est disponible mais qui est "mis de cote"
 # SELECT * FROM bibliotheque.emprunt; # On regarde les emprunts en cours
 CALL emprunterContenu(0,4,1); # l abonne 1 emprunte l unique exemplaire de star wars episode 2
 CALL reserverContenuEmprunte(2,3); # l abonne 3 reserve tous les contenus de code catalogue 2 (star wars episode 2)
-call rendreContenu(0,4); # l abonne 1 rend star wars episode 2, le contenu est de nouveau disponible
+CALL rendreContenu(0,4); # l abonne 1 rend star wars episode 2, le contenu est de nouveau disponible
+SELECT * FROM bibliotheque.emprunt; # On voit qu il y a un emprunt en cours
+SELECT * FROM bibliotheque.demande; # On voit qu il y a une demande en cours
 CALL emprunterContenu(0,4,3); # l abonne 3 souhaite emprunter un exemplaire de star wars episode  qui est disponible
-# SELECT * FROM bibliotheque.emprunt; # L emprunt de l abone 3 s est realise car il avait fait une reservation (le contenu etait "mis de cote")
-
-
-
+SELECT * FROM bibliotheque.emprunt; # L emprunt de l abone 3 s est realise car il avait fait une reservation (le contenu etait "mis de cote")
+SELECT * FROM bibliotheque.demande; # l emprunt a ete retire des demandes car le contenu a ete reserve
+*/
 
 
 
@@ -199,7 +200,7 @@ CALL payerPenalite(1337, 1); # l abonne 1 rajoute 1337 "credits" sur son compte,
 # Si l abonne n existe pas alors rien ne se passe
 # SELECT * FROM abonne WHERE numero = 1000;
 CALL payerPenalite(1337, 1000); # l abonne 1000n existe pas
- SELECT * FROM abonne WHERE numero = 1000;
+# SELECT * FROM abonne WHERE numero = 1000;
 */
 
 
