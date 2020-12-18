@@ -120,6 +120,23 @@ CALL reserverContenuEmprunte(41,39); #l'abonne réserve le contenu. Sa demande p
 
 
 
+/*
+# CAS 35 : payerPenalite
+# permet de faire baisser la penalite d un abonne
+# SELECT * FROM abonne WHERE numero = 1;
+CALL payerPenalite(1337, 1); # l abonne 1 rajoute 1337 "credits" sur son compte, il pourra se permettre de rendre des contenus en retard
+# SELECT * FROM abonne WHERE numero = 1;
+*/
+
+
+/*
+# CAS 35* : payerPenalite
+# Si l abonne n existe pas alors rien ne se passe
+# SELECT * FROM abonne WHERE numero = 1000;
+CALL payerPenalite(1337, 1000); # l abonne 1000n existe pas
+ SELECT * FROM abonne WHERE numero = 1000;
+*/
+
 
 /*
 # CAS 36 proc_retrait_abonne
